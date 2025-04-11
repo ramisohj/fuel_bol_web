@@ -1,0 +1,25 @@
+.map-container {
+	width: 100vw;
+	height: 100vh;
+}
+
+.mapboxgl-ctrl-attrib-button {
+	display: none !important;
+}
+
+.custom-marker {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  width: 30px;
+  height: 30px;
+}
+
+.mapboxgl-popup-content {
+  text-align: center;
+  padding: 5px;
+}
+
+.mapboxgl-popup-close-button {
+  display: none;
+}
