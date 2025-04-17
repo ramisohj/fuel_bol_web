@@ -28,7 +28,7 @@ const Mapbox: React.FC = () => {
 
 		mapRef.current = map;
 
-    fetch('/fuel-stations.geojson')
+    fetch('/fuel-levels/geo/3/0')
       .then((res) => res.json())
       .then((geojson) => {
         geojson.features.forEach((feature: any) => {
