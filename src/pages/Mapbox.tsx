@@ -15,6 +15,26 @@ const Mapbox: React.FC = () => {
   const [isLocating, setIsLocating] = useState(false);
   const [isGeolocateActive, setIsGeolocateActive] = useState(false);
 
+  const selectFuelIcon = (levelBsa: number) => {
+    if (levelBsa > 15000) {
+      return 'url(/green-fuel-icon.png)';
+    } else if (levelBsa > 5000 && levelBsa <= 15000) {
+      return 'url(/orange-fuel-icon.png)';
+    } else {
+      return 'url(/red-fuel-icon.png)';
+    }
+  }
+
+  const getAmountColor = (levelBsa: number) => {
+    if (levelBsa > 15000) {
+      return '#23a221';
+    } else if (levelBsa > 5000 && levelBsa <= 15000) {
+      return '#fd6117';
+    } else {
+      return '#df3a4a';
+    }
+  }
+
   const addGeolocateControl = () => {
     if (mapRef.current) {
       geolocateControlRef.current = new mapboxgl.GeolocateControl({
@@ -78,9 +98,9 @@ const Mapbox: React.FC = () => {
 
             const el = document.createElement('div');
             el.className = 'custom-marker';
-            el.style.backgroundImage = 'url(/logo512.png)';
-            el.style.width = '30px';
-            el.style.height = '30px';
+            el.style.backgroundImage = selectFuelIcon(levelBsa);
+            el.style.width = '3rem';
+            el.style.height = '3rem';
             el.style.backgroundSize = 'cover';
 
             const marker = new mapboxgl.Marker(el)
@@ -102,6 +122,7 @@ const Mapbox: React.FC = () => {
               fuelType={fuelType}
               levelBsa={levelBsa}
               monitoringAt={monitoringAt}
+              colorAmount={getAmountColor(levelBsa)}
             />);
 
             popup.setDOMContent(popupNode);

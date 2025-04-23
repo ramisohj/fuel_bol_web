@@ -8,6 +8,7 @@ interface FuelStationCardProps {
   fuelType: string;
   levelBsa: number;
   monitoringAt: string;
+  colorAmount: string;
 }
 
 const FuelStationCard: React.FC<FuelStationCardProps> = ({
@@ -15,7 +16,8 @@ const FuelStationCard: React.FC<FuelStationCardProps> = ({
   direction,
   fuelType,
   levelBsa,
-  monitoringAt
+  monitoringAt,
+  colorAmount
 }) => {
   return (
     <div className="fuel-station-card">
@@ -39,7 +41,7 @@ const FuelStationCard: React.FC<FuelStationCardProps> = ({
         </div>
         <div className="fuel-details">
           <p className="fuel-label">Available Fuel</p>
-          <p className="fuel-amount">{levelBsa} liters</p>
+          <p className="fuel-amount" style={{color: colorAmount}}>{levelBsa} liters</p>
         </div>
       </div>
 
