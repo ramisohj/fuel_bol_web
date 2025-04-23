@@ -122,17 +122,6 @@ const Mapbox: React.FC = () => {
     };
   }, []);
 
-  const handleLocate = () => {
-    if (!mapRef.current || !geolocateControlRef.current) return;
-
-    if (!isLocating) {
-      geolocateControlRef.current.trigger();
-      setIsLocating(true);
-    } else {
-      setIsLocating(false);
-    }
-  };
-
   return (
     <div className="map-wrapper">
       <div className="map-container" ref={mapContainerRef}  style={{ width: '100%', height: '100vh' }} />
