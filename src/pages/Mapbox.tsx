@@ -13,6 +13,41 @@ const Mapbox: React.FC = () => {
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const geolocateControlRef = useRef<mapboxgl.GeolocateControl | null>(null);
   const [isLocating, setIsLocating] = useState(false);
+  const [isGeolocateActive, setIsGeolocateActive] = useState(false);
+
+  const addGeolocateControl = () => {
+    if (mapRef.current) {
+      geolocateControlRef.current = new mapboxgl.GeolocateControl({
+        positionOptions: {
+          enableHighAccuracy: true,
+        },
+        trackUserLocation: true,
+        showUserLocation: true,
+        showAccuracyCircle: true,
+        showUserHeading: true,
+      });
+
+      mapRef.current.addControl(geolocateControlRef.current);
+
+      geolocateControlRef.current.on('geolocate', () => {
+        setIsGeolocateActive(true);
+      });
+    }
+  }
+
+  const toggleGeolocation = () => {
+    if (geolocateControlRef.current && mapRef.current) {
+      if (!isGeolocateActive) {
+        geolocateControlRef.current.trigger();
+      } else {
+        mapRef.current.removeControl(geolocateControlRef.current);
+        
+        addGeolocateControl();
+
+        setIsGeolocateActive(false);
+      }
+    }
+  };
 
   useEffect(() => {
     const map = new mapboxgl.Map({
@@ -28,16 +63,6 @@ const Mapbox: React.FC = () => {
         compact: true,
       })
     );
-
-    geolocateControlRef.current = new mapboxgl.GeolocateControl({
-      positionOptions: {
-        enableHighAccuracy: true,
-      },
-      trackUserLocation: true,
-      showUserLocation: true,
-      showAccuracyCircle: true,
-      showUserHeading: true,
-    });
 
     map.on('load', () => {
       fetch('https://fuelbol-production.up.railway.app/fuel-levels/geo/3/0')
@@ -90,6 +115,8 @@ const Mapbox: React.FC = () => {
 
     mapRef.current = map;
 
+    addGeolocateControl();
+
     return () => {
       map.remove();
     };
@@ -99,11 +126,9 @@ const Mapbox: React.FC = () => {
     if (!mapRef.current || !geolocateControlRef.current) return;
 
     if (!isLocating) {
-      mapRef.current.addControl(geolocateControlRef.current);
       geolocateControlRef.current.trigger();
       setIsLocating(true);
     } else {
-      mapRef.current.removeControl(geolocateControlRef.current);
       setIsLocating(false);
     }
   };
@@ -112,11 +137,11 @@ const Mapbox: React.FC = () => {
     <div className="map-wrapper">
       <div className="map-container" ref={mapContainerRef}  style={{ width: '100%', height: '100vh' }} />
       <button 
-        className={`locate-btn ${isLocating ? 'active' : ''}`} 
-        onClick={handleLocate}
-        aria-label={isLocating ? 'Hide my location' : 'Show my location'}
+        className={`locate-btn ${isGeolocateActive ? 'active' : ''}`} 
+        onClick={toggleGeolocation}
+        aria-label={isGeolocateActive ? 'Hide my location' : 'Show my location'}
       >
-        {isLocating ? 'Hide My Location' : 'Show My Location'}
+        {isGeolocateActive ? 'Hide My Location' : 'Show My Location'}
       </button>
     </div>
   );
