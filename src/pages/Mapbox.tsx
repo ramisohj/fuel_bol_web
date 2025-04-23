@@ -13,6 +13,61 @@ const Mapbox: React.FC = () => {
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const geolocateControlRef = useRef<mapboxgl.GeolocateControl | null>(null);
   const [isLocating, setIsLocating] = useState(false);
+  const [isGeolocateActive, setIsGeolocateActive] = useState(false);
+
+  const selectFuelIcon = (levelBsa: number) => {
+    if (levelBsa > 15000) {
+      return 'url(/green-fuel-icon.png)';
+    } else if (levelBsa > 5000 && levelBsa <= 15000) {
+      return 'url(/orange-fuel-icon.png)';
+    } else {
+      return 'url(/red-fuel-icon.png)';
+    }
+  }
+
+  const getAmountColor = (levelBsa: number) => {
+    if (levelBsa > 15000) {
+      return '#23a221';
+    } else if (levelBsa > 5000 && levelBsa <= 15000) {
+      return '#fd6117';
+    } else {
+      return '#df3a4a';
+    }
+  }
+
+  const addGeolocateControl = () => {
+    if (mapRef.current) {
+      geolocateControlRef.current = new mapboxgl.GeolocateControl({
+        positionOptions: {
+          enableHighAccuracy: true,
+        },
+        trackUserLocation: true,
+        showUserLocation: true,
+        showAccuracyCircle: true,
+        showUserHeading: true,
+      });
+
+      mapRef.current.addControl(geolocateControlRef.current);
+
+      geolocateControlRef.current.on('geolocate', () => {
+        setIsGeolocateActive(true);
+      });
+    }
+  }
+
+  const toggleGeolocation = () => {
+    if (geolocateControlRef.current && mapRef.current) {
+      if (!isGeolocateActive) {
+        geolocateControlRef.current.trigger();
+      } else {
+        mapRef.current.removeControl(geolocateControlRef.current);
+        
+        addGeolocateControl();
+
+        setIsGeolocateActive(false);
+      }
+    }
+  };
 
   useEffect(() => {
     const map = new mapboxgl.Map({
@@ -29,16 +84,6 @@ const Mapbox: React.FC = () => {
       })
     );
 
-    geolocateControlRef.current = new mapboxgl.GeolocateControl({
-      positionOptions: {
-        enableHighAccuracy: true,
-      },
-      trackUserLocation: true,
-      showUserLocation: true,
-      showAccuracyCircle: true,
-      showUserHeading: true,
-    });
-
     map.on('load', () => {
       fetch('https://fuelbol-production.up.railway.app/fuel-levels/geo/3/0')
         .then((res) => res.json())
@@ -53,9 +98,9 @@ const Mapbox: React.FC = () => {
 
             const el = document.createElement('div');
             el.className = 'custom-marker';
-            el.style.backgroundImage = 'url(/logo512.png)';
-            el.style.width = '30px';
-            el.style.height = '30px';
+            el.style.backgroundImage = selectFuelIcon(levelBsa);
+            el.style.width = '3rem';
+            el.style.height = '3rem';
             el.style.backgroundSize = 'cover';
 
             const marker = new mapboxgl.Marker(el)
@@ -77,6 +122,7 @@ const Mapbox: React.FC = () => {
               fuelType={fuelType}
               levelBsa={levelBsa}
               monitoringAt={monitoringAt}
+              colorAmount={getAmountColor(levelBsa)}
             />);
 
             popup.setDOMContent(popupNode);
@@ -90,33 +136,22 @@ const Mapbox: React.FC = () => {
 
     mapRef.current = map;
 
+    addGeolocateControl();
+
     return () => {
       map.remove();
     };
   }, []);
 
-  const handleLocate = () => {
-    if (!mapRef.current || !geolocateControlRef.current) return;
-
-    if (!isLocating) {
-      mapRef.current.addControl(geolocateControlRef.current);
-      geolocateControlRef.current.trigger();
-      setIsLocating(true);
-    } else {
-      mapRef.current.removeControl(geolocateControlRef.current);
-      setIsLocating(false);
-    }
-  };
-
   return (
     <div className="map-wrapper">
       <div className="map-container" ref={mapContainerRef}  style={{ width: '100%', height: '100vh' }} />
       <button 
-        className={`locate-btn ${isLocating ? 'active' : ''}`} 
-        onClick={handleLocate}
-        aria-label={isLocating ? 'Hide my location' : 'Show my location'}
+        className={`locate-btn ${isGeolocateActive ? 'active' : ''}`} 
+        onClick={toggleGeolocation}
+        aria-label={isGeolocateActive ? 'Hide my location' : 'Show my location'}
       >
-        {isLocating ? 'Hide My Location' : 'Show My Location'}
+        {isGeolocateActive ? 'Hide My Location' : 'Show My Location'}
       </button>
     </div>
   );
