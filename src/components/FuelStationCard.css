@@ -1,0 +1,138 @@
+
+.fuel-station-card {
+  width: 370px;
+  padding: 20px;
+  background-color: #f0f7ff;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  font-family: system-ui, -apple-system, sans-serif;
+  margin: 1rem;
+}
+
+.fuel-station-header {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.fuel-station-name {
+  font-size: 22px;
+  font-weight: 700;
+  color: #221F26;
+  margin: 0;
+}
+
+.fuel-type-badge {
+  background-color: #0EA5E9;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.location-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.location-icon {
+  color: #0EA5E9;
+}
+
+.location-text {
+  color: #403E43;
+  font-size: 1.2em;
+  margin: 0;
+  flex: 2;
+  text-align: left;
+}
+
+.fuel-type-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.fuel-type-container .fuel-icon {
+  color: #0EA5E9;
+}
+
+.fuel-type-container .fuel-type-text {
+  background-color: #0EA5E9;
+  color: white;
+  font-size: 1.2em;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 20px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.fuel-info-container {
+  background-color: white;
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.fuel-icon-container {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #0EA5E9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fuel-icon {
+  color: white;
+}
+
+.fuel-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.fuel-label {
+  color: #8A898C;
+  font-size: 14px;
+  margin: 0;
+}
+
+.fuel-amount {
+  color: #221F26;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.last-update-info {
+  display: flex;
+  justify-content: space-between;
+}
+
+.last-update-info .udpate-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.last-update-info .udpate-item .calendar-icon,
+.last-update-info .udpate-item .clock-icon {
+  color: #8A898C;
+}
+
+.last-update-info .udpate-item .update-text {
+  font-size: 1.2em;
+  color: #8A898C;
+}

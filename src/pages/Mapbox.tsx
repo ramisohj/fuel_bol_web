@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import './Mapbox.css';
+import { createRoot } from 'react-dom/client';
+import FuelStationCard from '../components/FuelStationCard';
 
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN || '';
-
 
 const Mapbox: React.FC = () => {
 
@@ -39,12 +40,16 @@ const Mapbox: React.FC = () => {
     });
 
     map.on('load', () => {
-      fetch('/fuel-stations.geojson')
+      fetch('https://fuelbol-production.up.railway.app/fuel-levels/geo/3/0')
         .then((res) => res.json())
         .then((geojson) => {
           geojson.features.forEach((feature: any) => {
             const coords = feature.geometry.coordinates;
             const name = feature.properties?.fuelStationName || 'Unnamed';
+            const direction = feature.properties?.direction || 'Unknown';
+            const fuelType = feature.properties?.fuelType || 'Unknown';
+            const levelBsa = feature.properties?.levelBsa || 0;
+            const monitoringAt = feature.properties?.monitoringAt || '';
 
             const el = document.createElement('div');
             el.className = 'custom-marker';
@@ -53,12 +58,31 @@ const Mapbox: React.FC = () => {
             el.style.height = '30px';
             el.style.backgroundSize = 'cover';
 
-            const popup = new mapboxgl.Popup().setText(name);
-
-            new mapboxgl.Marker(el)
+            const marker = new mapboxgl.Marker(el)
               .setLngLat(coords)
-              .setPopup(popup)
               .addTo(map);
+
+            const popup = new mapboxgl.Popup({
+              closeButton: true,
+              closeOnClick: true,
+              offset: 25,
+            });
+
+            const popupNode = document.createElement('div');
+            const popupRoot = createRoot(popupNode);
+
+            popupRoot.render(<FuelStationCard
+              name={name}
+              direction={direction}
+              fuelType={fuelType}
+              levelBsa={levelBsa}
+              monitoringAt={monitoringAt}
+            />);
+
+            popup.setDOMContent(popupNode);
+            popup.setMaxWidth('100%');
+
+            marker.setPopup(popup);
           });
         })
         .catch((err) => console.error('Error loading GeoJSON:', err));
@@ -86,7 +110,7 @@ const Mapbox: React.FC = () => {
 
   return (
     <div className="map-wrapper">
-      <div className="map-container" ref={mapContainerRef} />
+      <div className="map-container" ref={mapContainerRef}  style={{ width: '100%', height: '100vh' }} />
       <button 
         className={`locate-btn ${isLocating ? 'active' : ''}`} 
         onClick={handleLocate}
