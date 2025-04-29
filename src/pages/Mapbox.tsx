@@ -27,7 +27,6 @@ const Mapbox: React.FC = () => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const geolocateControlRef = useRef<mapboxgl.GeolocateControl | null>(null);
-  const [isLocating, setIsLocating] = useState(false);
   const [isGeolocateActive, setIsGeolocateActive] = useState(false);
   const [isSelectRegionDisabled, setIsSelectRegionDisabled] = useState(false);
   const stationsMarkers = useRef<mapboxgl.Marker[]>([]);
