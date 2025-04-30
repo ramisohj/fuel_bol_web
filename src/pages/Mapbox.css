@@ -54,6 +54,23 @@
   display: none;
 }
 
+.centered-popup {
+  position: fixed !important;
+  top: 80px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  margin-top: 0 !important;
+  z-index: 1000;
+}
+
+.centered-popup .mapboxgl-popup-tip {
+  display: none;
+}
+
+.centered-popup .mapboxgl-popup-content {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
 .select-region {
   position: absolute;
   top: 110px;

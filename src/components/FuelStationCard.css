@@ -1,6 +1,6 @@
 
 .fuel-station-card {
-  width: 370px;
+  width: 600px;
   padding: 20px;
   background-color: #f0f7ff;
   border-radius: 12px;
@@ -17,7 +17,7 @@
 }
 
 .fuel-station-name {
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 700;
   color: #221F26;
   margin: 0;

@@ -20,7 +20,11 @@ const FuelStationCard: React.FC<FuelStationCardProps> = ({
   colorAmount
 }) => {
   return (
-    <div className="fuel-station-card">
+    <div className="fuel-station-card" style={{
+      borderColor: colorAmount,
+      borderWidth: '0.3rem',
+      borderStyle: 'solid',
+    }}>
       <div className="fuel-station-header">
         <h2 className="fuel-station-name">{name}</h2>
       </div>
