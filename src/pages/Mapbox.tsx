@@ -111,6 +111,9 @@ const Mapbox: React.FC = () => {
               closeButton: true,
               closeOnClick: true,
               offset: 25,
+              className: 'centered-popup',
+              anchor: 'top',
+              maxWidth: '100%'
             });
 
             const popupNode = document.createElement('div');
