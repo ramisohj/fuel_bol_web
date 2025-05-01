@@ -1,23 +1,25 @@
 
+.mapboxgl-popup-content{
+  padding: 0px;
+}
+
 .fuel-station-card {
   width: 600px;
-  padding: 20px;
+  padding: 10px;
   background-color: #f0f7ff;
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   font-family: system-ui, -apple-system, sans-serif;
-  margin: 1rem;
 }
 
 .fuel-station-header {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  margin-bottom: 16px;
 }
 
 .fuel-station-name {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
   color: #221F26;
   margin: 0;
@@ -34,29 +36,22 @@
 }
 
 .location-container {
-  display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 10px;
 }
 
 .location-icon {
+  display: inline-block;
+  vertical-align: middle;
   color: #0EA5E9;
 }
 
 .location-text {
+  display: inline-block;
+  vertical-align: middle;
   color: #403E43;
-  font-size: 1.2em;
+  font-size: 10px;
   margin: 0;
-  flex: 2;
   text-align: left;
-}
-
-.fuel-type-container {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 10px;
 }
 
 .fuel-type-container .fuel-icon {
@@ -66,7 +61,7 @@
 .fuel-type-container .fuel-type-text {
   background-color: #0EA5E9;
   color: white;
-  font-size: 1.2em;
+  font-size: 10px;
   font-weight: 500;
   padding: 3px 10px;
   border-radius: 20px;
@@ -74,19 +69,40 @@
   white-space: nowrap;
 }
 
+.fuel-info-row-container{
+  display: flex;
+  gap: 5px;
+}
+
+.fuel-type-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .fuel-info-container {
+  flex: 1;
   background-color: white;
   border-radius: 10px;
-  padding: 16px;
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-bottom: 10px;
+}
+
+.last-update-info-container {
+  flex: 1;
+}
+
+.last-update-info {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
 }
 
 .fuel-icon-container {
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background-color: #0EA5E9;
   display: flex;
@@ -111,14 +127,9 @@
 
 .fuel-amount {
   color: #221F26;
-  font-size: 20px;
+  font-size: 25px;
   font-weight: 700;
   margin: 0;
-}
-
-.last-update-info {
-  display: flex;
-  justify-content: space-between;
 }
 
 .last-update-info .udpate-item {
@@ -133,6 +144,7 @@
 }
 
 .last-update-info .udpate-item .update-text {
-  font-size: 1.2em;
+  font-size: 10px;
+  text-transform: uppercase;
   color: #8A898C;
 }

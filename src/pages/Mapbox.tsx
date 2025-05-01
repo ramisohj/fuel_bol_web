@@ -124,6 +124,7 @@ const Mapbox: React.FC = () => {
     }
     properties: {
       fuelStationName: string;
+      idFuelStation: number;
       direction: string;
       fuelType: string;
       levelBsa: number;
@@ -134,6 +135,7 @@ const Mapbox: React.FC = () => {
 
     const coords = feature.geometry.coordinates;
     const name = feature.properties?.fuelStationName || 'Unnamed';
+    const idFuelStation = feature.properties?.idFuelStation;
     const direction = feature.properties?.direction || 'Unknown';
     const fuelType = feature.properties?.fuelType || 'Unknown';
     const levelBsa = feature.properties?.levelBsa || 0;
@@ -164,6 +166,7 @@ const Mapbox: React.FC = () => {
 
     popupRoot.render(<FuelStationCard
       name={name}
+      idFuelStation={idFuelStation}
       direction={direction}
       fuelType={fuelType}
       levelBsa={levelBsa}
@@ -264,7 +267,7 @@ const Mapbox: React.FC = () => {
       </button>
       <Select 
         className="select-region"
-        placeholder="Select a department"
+        placeholder={REGIONS.COCHABAMBA.name}
         onChange={handleRegionChange}
         disabled={isSelectRegionDisabled}
         loading={isSelectRegionDisabled}
