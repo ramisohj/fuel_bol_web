@@ -1,0 +1,99 @@
+.fuel-stats-container {
+    margin-top: 0px;
+  }
+  
+  .stats-button {
+    background-color: #3182ce;
+    color: white;
+    border: none;
+    padding: 10px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    /* transition: background-color 0.2s; */
+  }
+  
+  .stats-button:hover {
+    background-color: #2c5282;
+  }
+  
+  .stats-button.loading {
+    background-color: #a0aec0;
+    cursor: wait;
+  }
+  
+  .spinner {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top: 2px solid white;
+    width: 16px;
+    height: 16px;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .error-message {
+    color: #e53e3e;
+    margin-top: 10px;
+  }
+  
+  .stats-tables {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-top: 5px;
+  }
+  
+  @media (min-width: 768px) {
+    .stats-tables {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  
+  .stats-table {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    font-size: 15px;
+  }
+  
+  .stats-table h3 {
+    color: #3182ce;
+    margin-bottom: 15px;
+    font-size: 15px;
+    margin: 0px;
+  }
+  
+  .stats-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .stats-table tr {
+    border-bottom: 1px solid #edf2f7;
+  }
+  
+  .stats-table tr:last-child {
+    border-bottom: none;
+  }
+  
+  .stats-table tr.highlight {
+    background-color: #f7fafc;
+  }
+  
+  .stats-table td {
+    padding: 0px;
+  }
+  
+  .stats-table .label {
+    color: #4a5568;
+    width: 40%;
+  }
+  
+  .stats-table .value {
+    color: #2d3748;
+  }

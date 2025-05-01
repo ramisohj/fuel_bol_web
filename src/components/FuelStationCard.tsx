@@ -1,6 +1,8 @@
 import { Calendar, Clock, Droplet, Fuel, MapPin } from "lucide-react";
 import './FuelStationCard.css';
 import moment from "moment";
+import FuelStationStatsButton from "./FuelStationStatsButton/FuelStationStatsButton";
+import ANHButton from "./ANHButton/ANHButton";
 
 interface FuelStationCardProps {
   name: string;
@@ -65,7 +67,8 @@ const FuelStationCard: React.FC<FuelStationCardProps> = ({
           </div>
         </div>
       </div>
-      
+      <ANHButton fuelStationId={idFuelStation} fuelType={0} />
+      <FuelStationStatsButton fuelStationId={idFuelStation} fuelType={0} />
     </div>
   );
 };
