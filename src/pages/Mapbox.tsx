@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl, { LngLatLike } from 'mapbox-gl';
 import './Mapbox.css';
 import { createRoot } from 'react-dom/client';
+import { Form, Select } from 'antd';
 import FuelStationCard from '../components/FuelStationCard';
-import { API_ENDPOINTS, REGION_LIST, REGIONS } from '../constants';
-import { Select } from 'antd';
+import { API_ENDPOINTS, REGION_LIST, REGIONS, FUEL_TYPE_LIST, FUEL_TYPES } from '../constants';
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN || '';
 
@@ -48,9 +48,9 @@ const Mapbox: React.FC = () => {
     }
   };
 
-  const getFuelStations = async (region: string) => {
+  const getFuelStations = async (region: number, fuelType: number) => {
     try {
-      const response = await fetch(API_ENDPOINTS.FUEL_STATIONS.GET_BY_REGION_FUEL_TYPE(REGIONS[region as keyof typeof REGIONS].code,0));
+      const response = await fetch(API_ENDPOINTS.FUEL_STATIONS.GET_BY_REGION_FUEL_TYPE(region, fuelType));
       if (response.ok) {
         const geojson = await response.json();
         geojson.features.forEach((feature: any) => {
@@ -66,14 +66,14 @@ const Mapbox: React.FC = () => {
     }
   };
 
-  const handleRegionChange = async (value: string) => {
+  const handleRegionChange = async (values: { region: number, fuelType: number }) => {
     if (mapRef.current) {
       stationsMarkers.current.forEach((marker) => {
         marker.remove();
       });
       stationsMarkers.current = [];
       setIsSelectRegionDisabled(true);
-      await getFuelStations(value);
+      await getFuelStations(values.region, values.fuelType);
       setIsSelectRegionDisabled(false);
     }
   }
@@ -237,7 +237,7 @@ const Mapbox: React.FC = () => {
           const pair = Object.entries(REGIONS).find(([_, value]) => value.name === region.text);
           if (pair) {
             const defaultRegion = pair[0];
-            getFuelStations(defaultRegion);
+            getFuelStations(REGIONS[defaultRegion as keyof typeof REGIONS].code, FUEL_TYPES.GASOLINE.code);
           }
         },
         (error) => {
@@ -265,19 +265,51 @@ const Mapbox: React.FC = () => {
       >
         {isGeolocateActive ? 'Hide My Location' : 'Show My Location'}
       </button>
-      <Select 
-        className="select-region"
-        placeholder={REGIONS.COCHABAMBA.name}
-        onChange={handleRegionChange}
-        disabled={isSelectRegionDisabled}
-        loading={isSelectRegionDisabled}
-        options={
-          Object.entries(REGION_LIST).map(([key, value]) => ({
-            value: key,
-            label: REGIONS[value as keyof typeof REGIONS].name,
-          }))
-        }
-      />
+      <Form 
+        className="filter-form"
+        layout="inline"
+        onFinish={handleRegionChange}
+        initialValues={{
+          region: REGIONS.COCHABAMBA.code,
+          fuelType: FUEL_TYPES.GASOLINE.code,
+        }}
+      >
+        <Form.Item name="region">
+          <Select
+            placeholder={REGIONS.COCHABAMBA.name}
+            disabled={isSelectRegionDisabled}
+            loading={isSelectRegionDisabled}
+            options={
+              Object.entries(REGIONS).map(([_, value]) => ({
+                value: value.code,
+                label: value.name,
+              }))
+            }
+          />
+        </Form.Item>
+        <Form.Item name="fuelType">
+          <Select
+            placeholder="Select Fuel Type"
+            disabled={isSelectRegionDisabled}
+            loading={isSelectRegionDisabled}
+            options={
+              Object.entries(FUEL_TYPES).map(([_, value]) => ({
+                value: value.code,
+                label: value.name,
+              }))
+            }
+          />
+        </Form.Item>
+        <Form.Item>
+          <button 
+            type="submit" 
+            className="filter-btn"
+            disabled={isSelectRegionDisabled}
+          >
+            Show Fuel Stations
+          </button>
+        </Form.Item>
+      </Form>
     </div>
   );
 };
