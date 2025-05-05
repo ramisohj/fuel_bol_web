@@ -49,6 +49,25 @@ export const REGIONS = {
   }
 } as const;
 
+export const FUEL_TYPES = {
+  GASOLINE: {
+    code: 0,
+    name: 'Gasoline'
+  },
+  DIESEL: {
+    code: 1,
+    name: 'Diesel'
+  },
+  PREMIUM_GASOLINE: {
+    code: 2,
+    name: 'Premium Gasoline'
+  },
+  ULS_DIESEL: {
+    code: 3,
+    name: 'ULS Diesel'
+  }
+} as const;
+
 export const REGION_LIST = {
   COCHABAMBA: 'COCHABAMBA',
   LA_PAZ: 'LA_PAZ',
@@ -59,4 +78,11 @@ export const REGION_LIST = {
   CHUQUISACA: 'CHUQUISACA',
   BENI: 'BENI',
   PANDO: 'PANDO'
+} as const;
+
+export const FUEL_TYPE_LIST = {
+  GASOLINE: 'GASOLINE',
+  DIESEL: 'DIESEL',
+  PREMIUM_GASOLINE: 'PREMIUM_GASOLINE',
+  ULS_DIESEL: 'ULS_DIESEL'
 } as const;

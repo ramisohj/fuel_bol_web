@@ -139,3 +139,38 @@
   background-color: #444444 !important;
 }
 
+.filter-form {
+  position: absolute;
+  top: 100px;
+  left: 20px;
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  display: flex;
+  gap: 10px;
+}
+
+.filter-btn {
+  background-color: #4285f4;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  height: 32px;
+  display: flex;
+  align-items: center;
+}
+
+.filter-btn:hover {
+  background-color: #3367d6;
+}
+
+.filter-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
