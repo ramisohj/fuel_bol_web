@@ -4,6 +4,7 @@ import moment from "moment";
 import ANHButton from "./ANHButton/ANHButton";
 import RefillStatsButton from './StatisticButton/StatisticButton'
 import { API_ENDPOINTS } from "../constants";
+import { getNameTextByFuelCode } from "../util";
 
 interface FuelStationCardProps {
   name: string;
@@ -47,7 +48,7 @@ const FuelStationCard: React.FC<FuelStationCardProps> = ({
       <div className="fuel-info-row-container">
         <div className="fuel-type-container">
           <Fuel className="h-10 w-10 fuel-icon"/>
-          <p className="fuel-type-text">{fuelCode}</p>
+          <p className="fuel-type-text">{ getNameTextByFuelCode(fuelCode)}</p>
         </div>
 
         <div className="fuel-info-container">
@@ -55,7 +56,7 @@ const FuelStationCard: React.FC<FuelStationCardProps> = ({
             <Droplet size={15} className="fuel-icon" />
           </div>
           <div className="fuel-details">
-            <p className="fuel-amount" style={{color: colorAmount}}>{levelBsa} liters</p>
+            <p className="fuel-amount" style={{color: colorAmount}}>{Math.round(levelBsa)} [L]</p>
           </div>
         </div>
 
@@ -69,8 +70,11 @@ const FuelStationCard: React.FC<FuelStationCardProps> = ({
           </div>
         </div>
       </div>
-      <ANHButton fuelStationId={idFuelStation} fuelType={0} />
       <div className='stats-buttons-row-container'>
+        <ANHButton
+          fuelStationId={idFuelStation}
+          fuelType={fuelCode}
+        />
         <RefillStatsButton
           buttonName='Refill Statistics'
           fuelStationId={idFuelStation}

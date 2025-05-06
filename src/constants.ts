@@ -54,19 +54,23 @@ export const REGIONS = {
 export const FUEL_TYPES = {
   GASOLINE: {
     code: 0,
-    name: 'GASOLINE'
+    name: 'GASOLINE',
+    nameText: 'Gasoline'
   },
   DIESEL: {
     code: 1,
-    name: 'DIESEL'
+    name: 'DIESEL',
+    nameText: 'Diesel'
   },
   PREMIUM_GASOLINE: {
     code: 2,
-    name: 'PREMIUM GASOLINE'
+    name: 'PREMIUM GASOLINE',
+    nameText: 'Premium Gasoline'
   },
   ULS_DIESEL: {
     code: 3,
-    name: 'ULS DIESEL'
+    name: 'ULS DIESEL',
+    nameText: 'ULS Diesel'
   }
 } as const;
 
