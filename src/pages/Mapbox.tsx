@@ -4,7 +4,8 @@ import './Mapbox.css';
 import { createRoot } from 'react-dom/client';
 import { Form, Select } from 'antd';
 import FuelStationCard from '../components/FuelStationCard';
-import { API_ENDPOINTS, REGION_LIST, REGIONS, FUEL_TYPE_LIST, FUEL_TYPES } from '../constants';
+import { API_ENDPOINTS, REGIONS, FUEL_TYPES } from '../constants';
+import { getFuelCodeByFuelName } from '../util';
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN || '';
 
@@ -48,8 +49,10 @@ const Mapbox: React.FC = () => {
     }
   };
 
+  
   const getFuelStations = async (region: number, fuelType: number) => {
     try {
+      console.info(API_ENDPOINTS.FUEL_STATIONS.GET_BY_REGION_FUEL_TYPE(region, fuelType))
       const response = await fetch(API_ENDPOINTS.FUEL_STATIONS.GET_BY_REGION_FUEL_TYPE(region, fuelType));
       if (response.ok) {
         const geojson = await response.json();
@@ -168,7 +171,7 @@ const Mapbox: React.FC = () => {
       name={name}
       idFuelStation={idFuelStation}
       direction={direction}
-      fuelType={fuelType}
+      fuelCode={getFuelCodeByFuelName(fuelType)}
       levelBsa={levelBsa}
       monitoringAt={monitoringAt}
       colorAmount={getAmountColor(levelBsa)}

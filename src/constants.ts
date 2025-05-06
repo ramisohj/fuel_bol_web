@@ -2,8 +2,10 @@ export const API_ENDPOINTS = {
   FUEL_STATIONS: {
     GET_BY_REGION_FUEL_TYPE: (regionId: number, fuelType: number) => `https://fuelbol-production.up.railway.app/fuel-levels/geo/${regionId}/${fuelType}`,
   },
-  FUEL_STATION_STATS: {
-    GET_FUEL_STATISTICS: (fuelStationId: number, fuelType: number) => `https://fuel-bol-py.onrender.com/api/statistics/${fuelStationId}?fuel_type=${fuelType}`
+  FUEL_BOL_PY: {
+    GET_REFILL_STATISTICS: (fuelStationId: number, fuelType: number) => `https://fuel-bol-py.onrender.com/api/stats-image/refill?station_id=${fuelStationId}&fuel_type=${fuelType}`,
+    GET_REFILL_PLOT_STATISTICS: (fuelStationId: number, fuelType: number) => `https://fuel-bol-py.onrender.com/api/stats-image/refill-plots?station_id=${fuelStationId}&fuel_type=${fuelType}`,
+    GET_MODELS_STATISTICS: (fuelStationId: number, fuelType: number) => `https://fuel-bol-py.onrender.com/api/stats-image/models?station_id=${fuelStationId}&fuel_type=${fuelType}`
   },
   ANH: {
     GET_FUEL_STATION_DATA: (fuelStationId: number, fuelType: number) => `https://vsr11vpr08m22gb.anh.gob.bo:9443/WSMobile/v1/EstacionesSaldo/F761D63AC28406573E20A24CB1DB2EC6/${fuelStationId}/${fuelType}`
@@ -52,19 +54,19 @@ export const REGIONS = {
 export const FUEL_TYPES = {
   GASOLINE: {
     code: 0,
-    name: 'Gasoline'
+    name: 'GASOLINE'
   },
   DIESEL: {
     code: 1,
-    name: 'Diesel'
+    name: 'DIESEL'
   },
   PREMIUM_GASOLINE: {
     code: 2,
-    name: 'Premium Gasoline'
+    name: 'PREMIUM GASOLINE'
   },
   ULS_DIESEL: {
     code: 3,
-    name: 'ULS Diesel'
+    name: 'ULS DIESEL'
   }
 } as const;
 

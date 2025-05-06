@@ -1,24 +1,26 @@
 import { Calendar, Clock, Droplet, Fuel, MapPin } from "lucide-react";
 import './FuelStationCard.css';
 import moment from "moment";
-import FuelStationStatsButton from "./FuelStationStatsButton/FuelStationStatsButton";
 import ANHButton from "./ANHButton/ANHButton";
+import RefillStatsButton from './StatisticButton/StatisticButton'
+import { API_ENDPOINTS } from "../constants";
 
 interface FuelStationCardProps {
   name: string;
   idFuelStation: number;
   direction: string;
-  fuelType: string;
+  fuelCode: number;
   levelBsa: number;
   monitoringAt: string;
   colorAmount: string;
 }
 
+
 const FuelStationCard: React.FC<FuelStationCardProps> = ({
   name,
   idFuelStation,
   direction,
-  fuelType,
+  fuelCode,
   levelBsa,
   monitoringAt,
   colorAmount
@@ -45,7 +47,7 @@ const FuelStationCard: React.FC<FuelStationCardProps> = ({
       <div className="fuel-info-row-container">
         <div className="fuel-type-container">
           <Fuel className="h-10 w-10 fuel-icon"/>
-          <p className="fuel-type-text">{fuelType}</p>
+          <p className="fuel-type-text">{fuelCode}</p>
         </div>
 
         <div className="fuel-info-container">
@@ -68,7 +70,29 @@ const FuelStationCard: React.FC<FuelStationCardProps> = ({
         </div>
       </div>
       <ANHButton fuelStationId={idFuelStation} fuelType={0} />
-      <FuelStationStatsButton fuelStationId={idFuelStation} fuelType={0} />
+      <div className='stats-buttons-row-container'>
+        <RefillStatsButton
+          buttonName='Refill Statistics'
+          fuelStationId={idFuelStation}
+          statsAPI={API_ENDPOINTS.FUEL_BOL_PY.GET_REFILL_STATISTICS(idFuelStation, fuelCode)}
+          fuelStationName={name}
+          fuelType={fuelCode}
+        />
+        <RefillStatsButton
+          buttonName='Refill Graphics'
+          fuelStationId={idFuelStation}
+          statsAPI={API_ENDPOINTS.FUEL_BOL_PY.GET_REFILL_PLOT_STATISTICS(idFuelStation, fuelCode)}
+          fuelStationName={name}
+          fuelType={fuelCode}
+        />
+        <RefillStatsButton
+          buttonName='Machine Learning Models'
+          fuelStationId={idFuelStation}
+          statsAPI={API_ENDPOINTS.FUEL_BOL_PY.GET_MODELS_STATISTICS(idFuelStation, fuelCode)}
+          fuelStationName={name}
+          fuelType={fuelCode}
+        />
+      </div>
     </div>
   );
 };
