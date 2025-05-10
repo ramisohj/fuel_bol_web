@@ -2,12 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl, { LngLatLike } from 'mapbox-gl';
 import './Mapbox.css';
 import { createRoot } from 'react-dom/client';
-import { Form, Select } from 'antd';
 import { useTranslation } from 'react-i18next';
 
 import FuelStationCard from '../components/FuelStationCard';
 import { API_ENDPOINTS, REGIONS, FUEL_TYPES } from '../constants';
 import { getFuelCodeByFuelName } from '../util';
+import FilterControls from '../components/FilterControls/FilterControls';
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN || '';
 
@@ -33,7 +33,7 @@ const Mapbox: React.FC = () => {
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const geolocateControlRef = useRef<mapboxgl.GeolocateControl | null>(null);
   const [isGeolocateActive, setIsGeolocateActive] = useState(false);
-  const [isSelectRegionDisabled, setIsSelectRegionDisabled] = useState(false);
+  const [isLoadingGeoJSON, setIsLoadingGeoJson] = useState(true);
   const stationsMarkers = useRef<mapboxgl.Marker[]>([]);
 
   const getCountryCode = async () => {
@@ -57,14 +57,12 @@ const Mapbox: React.FC = () => {
   const getFuelStations = async (region: number, fuelType: number) => {
     try {
       console.info(API_ENDPOINTS.FUEL_STATIONS.GET_BY_REGION_FUEL_TYPE(region, fuelType))
+      setIsLoadingGeoJson(true);
       const response = await fetch(API_ENDPOINTS.FUEL_STATIONS.GET_BY_REGION_FUEL_TYPE(region, fuelType));
       if (response.ok) {
         const geojson = await response.json();
         geojson.features.forEach((feature: any) => {
-          
           const marker = createMarker(feature);
-
-          console.log(marker)
           if (marker) stationsMarkers.current.push(marker);
         });
       } else {
@@ -73,6 +71,8 @@ const Mapbox: React.FC = () => {
       
     } catch (error) {
       console.error(`Error when try to get fuel stations: ${error}`);
+    } finally {
+      setIsLoadingGeoJson(false);
     }
   };
 
@@ -82,9 +82,7 @@ const Mapbox: React.FC = () => {
         marker.remove();
       });
       stationsMarkers.current = [];
-      setIsSelectRegionDisabled(true);
       await getFuelStations(values.region, values.fuelType);
-      setIsSelectRegionDisabled(false);
     }
   }
 
@@ -275,51 +273,10 @@ const Mapbox: React.FC = () => {
       >
         {isGeolocateActive ? t('hideMyLocationButton') : t('showMyLocationButton')}
       </button>
-      <Form 
-        className="filter-form"
-        layout="inline"
-        onFinish={handleRegionChange}
-        initialValues={{
-          region: REGIONS.COCHABAMBA.code,
-          fuelType: FUEL_TYPES.GASOLINE.code,
-        }}
-      >
-        <Form.Item name="region">
-          <Select
-            placeholder={REGIONS.COCHABAMBA.name}
-            disabled={isSelectRegionDisabled}
-            loading={isSelectRegionDisabled}
-            options={
-              Object.entries(REGIONS).map(([_, value]) => ({
-                value: value.code,
-                label: value.name,
-              }))
-            }
-          />
-        </Form.Item>
-        <Form.Item name="fuelType">
-          <Select
-            placeholder="Select Fuel Type"
-            disabled={isSelectRegionDisabled}
-            loading={isSelectRegionDisabled}
-            options={
-              Object.entries(FUEL_TYPES).map(([_, value]) => ({
-                value: value.code,
-                label: t(value.nameCode),
-              }))
-            }
-          />
-        </Form.Item>
-        <Form.Item>
-          <button 
-            type="submit" 
-            className="filter-btn"
-            disabled={isSelectRegionDisabled}
-          >
-            {t('showFuelStationsButton')}
-          </button>
-        </Form.Item>
-      </Form>
+      <FilterControls
+        isLoadingGeoJSON={isLoadingGeoJSON}
+        onFilterChange={handleRegionChange}
+      />
     </div>
   );
 };
