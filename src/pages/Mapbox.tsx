@@ -3,6 +3,8 @@ import mapboxgl, { LngLatLike } from 'mapbox-gl';
 import './Mapbox.css';
 import { createRoot } from 'react-dom/client';
 import { Form, Select } from 'antd';
+import { useTranslation } from 'react-i18next';
+
 import FuelStationCard from '../components/FuelStationCard';
 import { API_ENDPOINTS, REGIONS, FUEL_TYPES } from '../constants';
 import { getFuelCodeByFuelName } from '../util';
@@ -24,6 +26,8 @@ interface MapboxGeocodeResponse {
 }
 
 const Mapbox: React.FC = () => {
+
+  const { t } = useTranslation();
 
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -57,7 +61,10 @@ const Mapbox: React.FC = () => {
       if (response.ok) {
         const geojson = await response.json();
         geojson.features.forEach((feature: any) => {
+          
           const marker = createMarker(feature);
+
+          console.log(marker)
           if (marker) stationsMarkers.current.push(marker);
         });
       } else {
@@ -264,9 +271,9 @@ const Mapbox: React.FC = () => {
       <button
         className={`locate-btn ${isGeolocateActive ? 'active' : ''}`}
         onClick={toggleGeolocation}
-        aria-label={isGeolocateActive ? 'Hide my location' : 'Show my location'}
+        aria-label={isGeolocateActive ? t('hideMyLocationButton') : t('showMyLocationButton')}
       >
-        {isGeolocateActive ? 'Hide My Location' : 'Show My Location'}
+        {isGeolocateActive ? t('hideMyLocationButton') : t('showMyLocationButton')}
       </button>
       <Form 
         className="filter-form"
@@ -298,7 +305,7 @@ const Mapbox: React.FC = () => {
             options={
               Object.entries(FUEL_TYPES).map(([_, value]) => ({
                 value: value.code,
-                label: value.name,
+                label: t(value.nameCode),
               }))
             }
           />
@@ -309,7 +316,7 @@ const Mapbox: React.FC = () => {
             className="filter-btn"
             disabled={isSelectRegionDisabled}
           >
-            Show Fuel Stations
+            {t('showFuelStationsButton')}
           </button>
         </Form.Item>
       </Form>

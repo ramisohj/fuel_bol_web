@@ -55,22 +55,26 @@ export const FUEL_TYPES = {
   GASOLINE: {
     code: 0,
     name: 'GASOLINE',
-    nameText: 'Gasoline'
+    nameText: 'Gasoline',
+    nameCode: 'gasoline'
   },
   DIESEL: {
     code: 1,
     name: 'DIESEL',
-    nameText: 'Diesel'
+    nameText: 'Diesel',
+    nameCode: 'diesel'
   },
   PREMIUM_GASOLINE: {
     code: 2,
     name: 'PREMIUM GASOLINE',
-    nameText: 'Premium Gasoline'
+    nameText: 'Premium Gasoline',
+    nameCode: 'premium_gasoline'
   },
   ULS_DIESEL: {
     code: 3,
-    name: 'ULS DIESEL',
-    nameText: 'ULS Diesel'
+    name: 'DIESEL ULS',
+    nameText: 'ULS Diesel',
+    nameCode: 'uls_diesel'
   }
 } as const;
 

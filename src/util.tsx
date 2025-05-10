@@ -10,4 +10,10 @@ export function getNameTextByFuelCode(code: number): string {
     const fuelType = Object.values(FUEL_TYPES).find((fuel) => fuel.code === code);
     if (!fuelType) throw new Error(`Invalid fuel name: ${code}`);
     return fuelType.nameText;
-  }
+}
+
+export function getNameCodeByFuelCode(code: number): string {
+    const fuelType = Object.values(FUEL_TYPES).find((fuel) => fuel.code === code);
+    if (!fuelType) throw new Error(`Invalid fuel name: ${code}`);
+    return fuelType.nameCode;
+}

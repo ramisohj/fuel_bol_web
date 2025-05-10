@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { API_ENDPOINTS } from '../../constants';
+import { useTranslation } from 'react-i18next';
 import './ANHButton.css';
 
 interface ApiResponse {
@@ -17,11 +18,12 @@ interface ApiResponse {
 }
 
 interface ANHButtonProps {
+  buttonName: string,
   fuelStationId: number;
   fuelType: number;
 }
 
-const ANHButton = ({ fuelStationId, fuelType }: ANHButtonProps) => {
+const ANHButton = ({ buttonName, fuelStationId, fuelType }: ANHButtonProps) => {
   const [totalBsa, setTotalBsa] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -32,6 +34,8 @@ const ANHButton = ({ fuelStationId, fuelType }: ANHButtonProps) => {
   const isDragging = useRef(false);
   const startPos = useRef({ x: 0, y: 0 });
   const startPopupPos = useRef({ left: 0, top: 0 });
+
+  const { t } = useTranslation();
 
   const fetchBalances = async () => {
     setLoading(true);
@@ -123,7 +127,7 @@ const ANHButton = ({ fuelStationId, fuelType }: ANHButtonProps) => {
             Loading...
           </>
         ) : (
-          'ANH Fuel Level'
+          buttonName
         )}
       </button>
 
@@ -136,7 +140,7 @@ const ANHButton = ({ fuelStationId, fuelType }: ANHButtonProps) => {
           >
             <div className="popup-header">
               <h3 ref={headerTextRef} className="header-text">
-                Fuel Level Information from ANH: 
+                {t('anhPopUpTitle')}
                 {error ? (
                   <p className="error-message">{error}</p>
                 ) : totalBsa !== null ? (

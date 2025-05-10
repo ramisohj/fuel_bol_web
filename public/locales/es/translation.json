@@ -1,0 +1,19 @@
+{
+    "showMyLocationButton": "Mostrar Mi Ubicación",
+    "hideMyLocationButton": "Esconder Mi Ubicación",
+
+    "showFuelStationsButton": "Mostrar E.S",
+
+    "anhButton": "Saldo ANH",
+    "statisticalTablesButton": "Tablas Estadísticas",
+    "statisticalGraphsButton": "Gráficos Estadísticos",
+    "mlModelsButton": "Modelos de ML",
+    
+    "anhPopUpTitle": "Saldo Combustible ANH: ",
+    "noDataAvailable": "Sin datos disponibles.",
+
+    "gasoline": "Gasolina",
+    "diesel": "Diesel",
+    "premium_gasoline": "Gasolina Premium",
+    "uls_diesel": "Diesel ULS"
+}

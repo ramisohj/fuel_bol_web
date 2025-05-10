@@ -1,0 +1,19 @@
+{
+    "showMyLocationButton": "Show My Location",
+    "hideMyLocationButton": "Hide My Location",
+
+    "showFuelStationsButton": "Show Fuel Stations",
+
+    "anhButton": "ANH Fuel Level",
+    "statisticalTablesButton": "Statistical Tables",
+    "statisticalGraphsButton": "Statistical Graphs",
+    "mlModelsButton": "ML. Models",
+    
+    "anhPopUpTitle": "Fuel Level from ANH: ",
+    "noDataAvailable": "No data available.",
+
+    "gasoline": "Gasoline",
+    "disesel": "Diesel",
+    "premium_gasoline": "Premium Gasoline",
+    "uls_disel": "ULS Diesel"
+}
