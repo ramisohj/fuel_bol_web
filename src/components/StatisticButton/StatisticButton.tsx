@@ -18,8 +18,11 @@ const StatisticButton = ({buttonName, statsAPI, fuelStationId, fuelStationName, 
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [isMaximized, setIsMaximized] = useState<boolean>(false);
   const [isMinimized, setIsMinimized] = useState<boolean>(false);
-  const [position, setPosition] = useState({ x: window.innerWidth/2 - 1200, y: 100 });
-  const [size, setSize] = useState({ width: 1200, height: 800 });
+  const [position, setPosition] = useState({ x: 0, y: 100 });
+  const [size, setSize] = useState({ 
+    width: Math.min(800, window.innerWidth * 0.9),
+    height: Math.min(600, window.innerHeight * 0.7)  
+  });
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [isResizing, setIsResizing] = useState<ResizeDirection | null>(null);
@@ -253,7 +256,12 @@ const StatisticButton = ({buttonName, statsAPI, fuelStationId, fuelStationName, 
               width: isMaximized ? '95vw' : `${size.width}px`,
               height: isMaximized ? '95vh' : (isMinimized ? '40px' : `${size.height}px`),
               transform: isMaximized ? 'none' : `translate(${position.x}px, ${position.y}px)`,
-              cursor: isDragging ? 'grabbing' : (isResizing ? `${isResizing}-resize` : 'default')
+              cursor: isDragging ? 'grabbing' : (isResizing ? `${isResizing}-resize` : 'default'),
+              position: 'fixed',
+              top: '120px',
+              boxSizing: 'border-box',
+              margin: '0 auto',
+              maxWidth: '90vw',
             }}
             onClick={(e) => e.stopPropagation()}
           >
