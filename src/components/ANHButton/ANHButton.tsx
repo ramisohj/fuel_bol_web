@@ -64,10 +64,13 @@ const ANHButton = ({ buttonName, fuelStationId, fuelType }: ANHButtonProps) => {
   useEffect(() => {
     if (!showPopup || !popupRef.current) return;
 
-    // Center the popup initially
+    // Position the popup below the FuelStationCard and center it horizontally
     const popup = popupRef.current;
-    popup.style.left = `${window.innerWidth / 2 - popup.offsetWidth / 2}px`;
-    popup.style.top = `${window.innerHeight / 2 - popup.offsetHeight / 2}px`;
+    popup.style.position = 'fixed';
+    popup.style.left = '50%';
+    popup.style.transform = 'translateX(-50%)';
+    popup.style.top = '200px'; // This positions it below the FuelStationCard
+    popup.style.zIndex = '1000';
   }, [showPopup]);
 
   useEffect(() => {
@@ -137,6 +140,12 @@ const ANHButton = ({ buttonName, fuelStationId, fuelType }: ANHButtonProps) => {
             ref={popupRef}
             className="popup-content"
             onClick={(e) => e.stopPropagation()}
+            style={{
+              position: 'fixed',
+              minWidth: '300px',
+              maxWidth: '100%',
+              margin: '0 auto'
+            }}
           >
             <div className="popup-header">
               <h3 ref={headerTextRef} className="header-text">
