@@ -51,7 +51,7 @@ const PrivacyPolicy: React.FC = () => {
       <h2 style={styles.subheader}>6. Contact Us</h2>
       <p>
         If you have any questions or concerns about this Privacy Policy, please contact us at:<br />
-        📧 <strong>[your email here]</strong>
+        📧 <strong>ramisohj@gmail.com</strong>
       </p>
 
       <h2 style={styles.subheader}>7. Disclaimer</h2>
