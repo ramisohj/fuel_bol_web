@@ -9,6 +9,7 @@ export default function Navbar() {
       <ul className="nav-links">
         <li><Link to="/" className="nav-btn">{t('pageTitleSearchFuelStations')}</Link></li>
         <li><Link to="/about" className="nav-btn">{t('pageTitleAbout')}</Link></li>
+        <li><Link to="/privacy-policy" className="nav-btn">{t('pageTitlePrivacyPolicy')}</Link></li>
       </ul>
     </nav>
   );
