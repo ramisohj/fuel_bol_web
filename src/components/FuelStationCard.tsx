@@ -83,14 +83,14 @@ const FuelStationCard: React.FC<FuelStationCardProps> = ({
         <RefillStatsButton
           buttonName={t('timeSeriesButton')}
           fuelStationId={idFuelStation}
-          statsAPI={API_ENDPOINTS.FUEL_BOL_PY.GET_TIME_SEREIES(idFuelStation, fuelCode)}
+          statsAPI={API_ENDPOINTS.FUEL_BOL_PY.GET_TIME_SERIES(idFuelStation, fuelCode)}
           fuelStationName={name}
           fuelType={fuelCode}
         />
         <RefillStatsButton
           buttonName={t('graphsButton')}
           fuelStationId={idFuelStation}
-          statsAPI={API_ENDPOINTS.FUEL_BOL_PY.GET_GRAPHS(idFuelStation, fuelCode)}
+          statsAPI={API_ENDPOINTS.FUEL_BOL_PY.GET_STATISTICAL_GRAPHS(idFuelStation, fuelCode)}
           fuelStationName={name}
           fuelType={fuelCode}
         />
@@ -104,7 +104,7 @@ const FuelStationCard: React.FC<FuelStationCardProps> = ({
         <RefillStatsButton
           buttonName={t('mlModelsButton')}
           fuelStationId={idFuelStation}
-          statsAPI={API_ENDPOINTS.FUEL_BOL_PY.GET_ML_MODELS(idFuelStation, fuelCode)}
+          statsAPI={API_ENDPOINTS.FUEL_BOL_PY.GET_MACHINE_LEARNING_MODELS(idFuelStation, fuelCode)}
           fuelStationName={name}
           fuelType={fuelCode}
         />

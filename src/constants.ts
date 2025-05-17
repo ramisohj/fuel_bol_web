@@ -3,10 +3,10 @@ export const API_ENDPOINTS = {
     GET_BY_REGION_FUEL_TYPE: (regionId: number, fuelType: number) => `https://fuelbol-production.up.railway.app/fuel-levels/geo/${regionId}/${fuelType}`,
   },
   FUEL_BOL_PY: {
-    GET_TIME_SEREIES: (fuelStationId: number, fuelType: number) => `https://fuel-bol-py.onrender.com/api/stats-image/time-series?station_id=${fuelStationId}&fuel_type=${fuelType}`,
-    GET_GRAPHS: (fuelStationId: number, fuelType: number) => `https://fuel-bol-py.onrender.com/api/stats-image/plots?station_id=${fuelStationId}&fuel_type=${fuelType}`,
-    GET_STATISTICAL_DATA: (fuelStationId: number, fuelType: number) => `https://fuel-bol-py.onrender.com/api/stats-image/st-models?station_id=${fuelStationId}&fuel_type=${fuelType}`,
-    GET_ML_MODELS: (fuelStationId: number, fuelType: number) => `https://fuel-bol-py.onrender.com/api/stats-image/ml-models?station_id=${fuelStationId}&fuel_type=${fuelType}`
+    GET_TIME_SERIES: (fuelStationId: number, fuelType: number) => `https://fuel-bol-py.onrender.com/api/stats-image/time-series?station_id=${fuelStationId}&fuel_type=${fuelType}`,
+    GET_STATISTICAL_GRAPHS: (fuelStationId: number, fuelType: number) => `https://fuel-bol-py.onrender.com/api/stats-image/statistical-graphs?station_id=${fuelStationId}&fuel_type=${fuelType}`,
+    GET_STATISTICAL_DATA: (fuelStationId: number, fuelType: number) => `https://fuel-bol-py.onrender.com/api/stats-image/statistical-data?station_id=${fuelStationId}&fuel_type=${fuelType}`,
+    GET_MACHINE_LEARNING_MODELS: (fuelStationId: number, fuelType: number) => `https://fuel-bol-py.onrender.com/api/stats-image/machine-learning-models?station_id=${fuelStationId}&fuel_type=${fuelType}`
   },
   ANH: {
     GET_FUEL_STATION_DATA: (fuelStationId: number, fuelType: number) => `https://vsr11vpr08m22gb.anh.gob.bo:9443/WSMobile/v1/EstacionesSaldo/F761D63AC28406573E20A24CB1DB2EC6/${fuelStationId}/${fuelType}`
