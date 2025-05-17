@@ -81,23 +81,30 @@ const FuelStationCard: React.FC<FuelStationCardProps> = ({
           fuelType={fuelCode}
         />
         <RefillStatsButton
-          buttonName={t('statisticalTablesButton')}
+          buttonName={t('timeSeriesButton')}
           fuelStationId={idFuelStation}
-          statsAPI={API_ENDPOINTS.FUEL_BOL_PY.GET_REFILL_STATISTICS(idFuelStation, fuelCode)}
+          statsAPI={API_ENDPOINTS.FUEL_BOL_PY.GET_TIME_SEREIES(idFuelStation, fuelCode)}
           fuelStationName={name}
           fuelType={fuelCode}
         />
         <RefillStatsButton
-          buttonName={t('statisticalGraphsButton')}
+          buttonName={t('graphsButton')}
           fuelStationId={idFuelStation}
-          statsAPI={API_ENDPOINTS.FUEL_BOL_PY.GET_REFILL_PLOT_STATISTICS(idFuelStation, fuelCode)}
+          statsAPI={API_ENDPOINTS.FUEL_BOL_PY.GET_GRAPHS(idFuelStation, fuelCode)}
+          fuelStationName={name}
+          fuelType={fuelCode}
+        />
+        <RefillStatsButton
+          buttonName={t('statisticalDataButton')}
+          fuelStationId={idFuelStation}
+          statsAPI={API_ENDPOINTS.FUEL_BOL_PY.GET_STATISTICAL_DATA(idFuelStation, fuelCode)}
           fuelStationName={name}
           fuelType={fuelCode}
         />
         <RefillStatsButton
           buttonName={t('mlModelsButton')}
           fuelStationId={idFuelStation}
-          statsAPI={API_ENDPOINTS.FUEL_BOL_PY.GET_MODELS_STATISTICS(idFuelStation, fuelCode)}
+          statsAPI={API_ENDPOINTS.FUEL_BOL_PY.GET_ML_MODELS(idFuelStation, fuelCode)}
           fuelStationName={name}
           fuelType={fuelCode}
         />

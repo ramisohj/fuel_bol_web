@@ -9,9 +9,10 @@
     "showFuelStationsButton": "Mostrar E.S",
 
     "anhButton": "Saldo ANH",
-    "statisticalTablesButton": "Tablas Estadísticas",
-    "statisticalGraphsButton": "Gráficos Estadísticos",
-    "mlModelsButton": "Modelos de ML",
+    "timeSeriesButton": "Series de Tiempo",
+    "graphsButton": "Gráficos Estadísticos",
+    "statisticalDataButton": "Datos Estadísticos",
+    "mlModelsButton": "ML. Models",
     
     "anhPopUpTitle": "Saldo Combustible ANH: ",
     "noDataAvailable": "Sin datos disponibles.",

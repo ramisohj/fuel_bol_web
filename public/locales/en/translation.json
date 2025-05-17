@@ -9,8 +9,9 @@
     "showFuelStationsButton": "Show Fuel Stations",
 
     "anhButton": "ANH Fuel Level",
-    "statisticalTablesButton": "Statistical Tables",
-    "statisticalGraphsButton": "Statistical Graphs",
+    "timeSeriesButton": "Time Series",
+    "graphsButton": "Statistical Graphs",
+    "statisticalDataButton": "Statistical Data",
     "mlModelsButton": "ML. Models",
     
     "anhPopUpTitle": "Fuel Level from ANH: ",
