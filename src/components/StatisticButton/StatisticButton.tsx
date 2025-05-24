@@ -29,7 +29,6 @@ const StatisticButton = ({buttonName, statsAPI, fuelStationId, fuelStationName, 
   const [resizeStart, setResizeStart] = useState({ x: 0, y: 0, width: 0, height: 0 });
 
   const popupRef = useRef<HTMLDivElement>(null);
-  const imageCache = useRef<Map<string, string>>(new Map());
 
   useEffect(() => {
     const handleResize = () => {
@@ -159,27 +158,16 @@ const StatisticButton = ({buttonName, statsAPI, fuelStationId, fuelStationName, 
   }, [isDragging, isResizing, dragOffset, resizeStart]);
 
   const fetchImage = async () => {
-    // Check cache first
-    const cacheKey = `${statsAPI}-${fuelStationId}-${fuelType}`;
-    if (imageCache.current.has(cacheKey)) {
-      setImageUrl(imageCache.current.get(cacheKey) || null);
-      setShowPopup(true);
-      return;
-    }
 
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(statsAPI, {
-        cache: 'force-cache' // Utilize browser cache
-      });
+      const response = await fetch(statsAPI);
       
       if (!response.ok) throw new Error('Failed to fetch image');
       
       const blob = await response.blob();
       const objectUrl = URL.createObjectURL(blob);
-      
-      imageCache.current.set(cacheKey, objectUrl);
       
       setImageUrl(objectUrl);
       setShowPopup(true);
@@ -207,16 +195,6 @@ const StatisticButton = ({buttonName, statsAPI, fuelStationId, fuelStationName, 
   const closePopup = () => {
     setShowPopup(false);
   };
-
-  useEffect(() => {
-    return () => {
-      if (imageUrl && !imageCache.current.has(imageUrl)) {
-        URL.revokeObjectURL(imageUrl);
-      }
-      imageCache.current.forEach(url => URL.revokeObjectURL(url));
-      imageCache.current.clear();
-    };
-  }, []);
 
   const ResizeHandle = ({ direction }: { direction: ResizeDirection }) => (
     <div 
