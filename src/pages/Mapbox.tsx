@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import FuelStationCard from '../components/FuelStationCard';
 import { API_ENDPOINTS, REGIONS, FUEL_TYPES } from '../constants';
 import { getFuelCodeByFuelName } from '../util';
+import { COLORS } from '../colors';
 import FilterControls from '../components/FilterControls/FilterControls';
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN || '';
@@ -87,22 +88,26 @@ const Mapbox: React.FC = () => {
   }
 
   const selectFuelIcon = (levelBsa: number) => {
-    if (levelBsa > 15000) {
-      return 'url(/green-fuel-icon.png)';
+    if (levelBsa <= 0) {
+      return 'url(/images/fuel_station_black.png)';
+    } else if (levelBsa > 0 && levelBsa <= 5000) {
+      return 'url(/images/fuel_station_red.png)';
     } else if (levelBsa > 5000 && levelBsa <= 15000) {
-      return 'url(/orange-fuel-icon.png)';
+      return 'url(/images/fuel_station_orange.png)';
     } else {
-      return 'url(/red-fuel-icon.png)';
+      return 'url(/images/fuel_station_green.png)';
     }
   }
 
   const getAmountColor = (levelBsa: number) => {
-    if (levelBsa > 15000) {
-      return '#23a221';
+    if (levelBsa <= 0) {
+      return COLORS.BLACK;
+    } else if (levelBsa > 0 && levelBsa <= 5000) {
+      return COLORS.RED;
     } else if (levelBsa > 5000 && levelBsa <= 15000) {
-      return '#fd6117';
+      return COLORS.ORANGE;
     } else {
-      return '#df3a4a';
+      return COLORS.GREEN;
     }
   }
 
