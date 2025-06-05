@@ -9,7 +9,8 @@
     "showFuelStationsButton": "Mostrar E.S",
 
     "anhButton": "Saldo ANH",
-    "timeSeriesButton": "Series de Tiempo",
+    "dailyTimeSeriesButton": "Series de Tiempo (Hoy)",
+    "weeklyTimeSeriesButton": "Series de Tiempo (Semanal)",
     "graphsButton": "Gráficos Estadísticos",
     "statisticalDataButton": "Datos Estadísticos",
     "mlModelsButton": "ML. Models",

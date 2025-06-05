@@ -6,6 +6,8 @@ import ANHButton from "./ANHButton/ANHButton";
 import RefillStatsButton from './StatisticButton/StatisticButton'
 import { API_ENDPOINTS } from "../constants";
 import { getNameCodeByFuelCode } from "../util";
+import { getTodayDateRange } from "../util";
+import { getLastSevenDaysRange } from "../util";
 
 interface FuelStationCardProps {
   name: string;
@@ -29,6 +31,9 @@ const FuelStationCard: React.FC<FuelStationCardProps> = ({
 }) => {
 
   const { t } = useTranslation();
+
+  const { todayStartDate, todayEndDate } = getTodayDateRange();
+  const { weekStartDate, weekEndDate } = getLastSevenDaysRange();
 
   return (
     <div className="fuel-station-card" style={{
@@ -81,9 +86,16 @@ const FuelStationCard: React.FC<FuelStationCardProps> = ({
           fuelType={fuelCode}
         />
         <RefillStatsButton
-          buttonName={t('timeSeriesButton')}
+          buttonName={t('dailyTimeSeriesButton')}
           fuelStationId={idFuelStation}
-          statsAPI={API_ENDPOINTS.FUEL_BOL_PY.GET_TIME_SERIES(idFuelStation, fuelCode)}
+          statsAPI={API_ENDPOINTS.FUEL_BOL_PY.GET_TIME_SERIES(idFuelStation, fuelCode, todayStartDate, todayEndDate)}
+          fuelStationName={name}
+          fuelType={fuelCode}
+        />
+        <RefillStatsButton
+          buttonName={t('weeklyTimeSeriesButton')}
+          fuelStationId={idFuelStation}
+          statsAPI={API_ENDPOINTS.FUEL_BOL_PY.GET_TIME_SERIES(idFuelStation, fuelCode, weekStartDate, weekEndDate)}
           fuelStationName={name}
           fuelType={fuelCode}
         />
