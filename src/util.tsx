@@ -51,6 +51,16 @@ export function getLastSevenDaysRange(): { weekStartDate: string; weekEndDate: s
   };
 };
 
-const formatDateForAPI = (date: Date): string => {
-  return date.toISOString().split('.')[0];
+function formatDateForAPI(date: Date): string {
+  const pad = (n: number) => String(n).padStart(2, '0');
+
+  const year = date.getFullYear();
+  const month = pad(date.getMonth() + 1); // months are 0-indexed
+  const day = pad(date.getDate());
+  const hours = pad(date.getHours());
+  const minutes = pad(date.getMinutes());
+  const seconds = pad(date.getSeconds());
+
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
 }
+
