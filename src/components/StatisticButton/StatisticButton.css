@@ -1,226 +1,125 @@
 .fuel-stats-container {
-    position: relative;
-    display: inline-block;
+  position: relative;
+  display: inline-block;
+}
+
+.stats-button {
+  padding: 8px 16px;
+  background-color: #1f1f27;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 10px;
+  transition: background-color 0.3s;
+}
+
+.stats-button:hover {
+  background-color: #444444;
+}
+
+.stats-button.loading {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
-  
-  .stats-button {
-    padding: 8px 16px;
-    background-color: #1f1f27;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 10px;
-    transition: background-color 0.3s;
-  }
-  
-  .stats-button:hover {
-    background-color: #444444;
-  }
-  
-  .stats-button.loading {
-    background-color: #cccccc;
-    cursor: not-allowed;
-  }
-  
-  .spinner {
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    border: 2px solid rgba(255,255,255,.3);
-    border-radius: 50%;
-    border-top-color: white;
-    animation: spin 1s ease-in-out infinite;
-    margin-right: 8px;
-  }
-  
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-  
-  .error-message {
-    color: #d32f2f;
-    margin-top: 8px;
-    font-size: 14px;
-  }
-  
-  .popup-overlay {
-    background-color: transparent !important;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1000;
-  }
-  
-  .popup-overlay.maximized {
-    background-color: rgba(0, 0, 0, 0.7);
-  }
-  
-  .popup {
-    position: absolute;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    min-width: 300px;
-    min-height: 200px;
-    transition: all 0.2s ease;
-    overflow: auto;
-  }
-  
-  .popup.maximized {
-    width: 100% !important;
-    height: 95vh !important;
-    top: 0 !important;
-    left: 0 !important;
-    margin: 0;
-    transform: none !important;
-  }
-  
-  .popup.minimized {
-    height: 40px !important;
-  }
-  
-  .popup-header {
-    padding: 10px 15px;
-    background: #f5f5f5;
-    border-bottom: 1px solid #ddd;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: move;
-    user-select: none;
-  }
-  
-  .popup-header h3 {
-    margin: 0;
-    font-size: 16px;
-    color: #333;
-  }
-  
-  .popup-controls {
-    display: flex;
-    gap: 8px;
-  }
-  
-  .control-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-    padding: 2px 8px;
-    border-radius: 4px;
-    color: #333;
-  }
-  
-  .control-button:hover {
-    background-color: #e0e0e0;
-  }
-  
-  .control-button.close:hover {
-    background-color: #ff4444;
-    color: white;
-  }
-  
-  .popup-content {
-    flex: 1;
-    padding: 15px;
-    max-height: calc(100vh - 200px);
-    overflow-y: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-  }
-  
-  .popup-content img {
-    max-width: 100%;
-    object-fit: contain;
-    border-radius: 4px;
-    height: auto;
-  }
-  
-  /* Resize handles */
-  .resize-handle {
-    position: absolute;
-    background-color: #4CAF50;
-    z-index: 10;
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-  
-  .popup:hover .resize-handle {
-    opacity: 1;
-  }
-  
-  .resize-n {
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 5px;
-    cursor: n-resize;
-  }
-  
-  .resize-ne {
-    top: 0;
-    right: 0;
-    width: 10px;
-    height: 10px;
-    cursor: ne-resize;
-  }
-  
-  .resize-e {
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 5px;
-    cursor: e-resize;
-  }
-  
-  .resize-se {
-    bottom: 0;
-    right: 0;
-    width: 10px;
-    height: 10px;
-    cursor: se-resize;
-  }
-  
-  .resize-s {
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 5px;
-    cursor: s-resize;
-  }
-  
-  .resize-sw {
-    bottom: 0;
-    left: 0;
-    width: 10px;
-    height: 10px;
-    cursor: sw-resize;
-  }
-  
-  .resize-w {
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 5px;
-    cursor: w-resize;
-  }
-  
-  .resize-nw {
-    top: 0;
-    left: 0;
-    width: 10px;
-    height: 10px;
-    cursor: nw-resize;
-  }
-  
-  .grabbing {
-    cursor: grabbing;
-  }
+}
+
+.error-message {
+  color: #d32f2f;
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+.popup-overlay {
+  background-color: transparent !important;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+}
+
+.popup {
+  position: absolute;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 300px;
+  min-height: 200px;
+  transition: all 0.2s ease;
+  overflow: auto;
+}
+
+.popup-header {
+  padding: 10px 15px;
+  background: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: move;
+  user-select: none;
+}
+
+.popup-header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.control-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  color: #333;
+}
+
+.control-button:hover {
+  background-color: #e0e0e0;
+}
+
+.control-button.close:hover {
+  background-color: #ff4444;
+  color: white;
+}
+
+.popup-content {
+  flex: 1;
+  padding: 15px;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.popup-content img {
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 4px;
+  height: auto;
+}

@@ -9,48 +9,19 @@ interface StatisticButtonProps {
   fuelType: number;
 }
 
-type ResizeDirection = 'n' | 'ne' | 'e' | 'se' | 's' | 'sw' | 'w' | 'nw';
-
-const StatisticButton = ({buttonName, statsAPI, fuelStationId, fuelStationName, fuelType }: StatisticButtonProps) => {
+const StatisticButton = ({ buttonName, statsAPI, fuelStationId, fuelStationName, fuelType }: StatisticButtonProps) => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [showPopup, setShowPopup] = useState<boolean>(false);
-  const [isMaximized, setIsMaximized] = useState<boolean>(false);
-  const [isMinimized, setIsMinimized] = useState<boolean>(false);
   const [position, setPosition] = useState({ x: 0, y: 100 });
-  const [size, setSize] = useState({ 
-    width: Math.min(800, window.innerWidth * 0.9),
-    height: Math.min(600, window.innerHeight * 0.7)  
-  });
+  const [size, setSize] = useState({ width: 800, height: 600 });
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [isResizing, setIsResizing] = useState<ResizeDirection | null>(null);
-  const [resizeStart, setResizeStart] = useState({ x: 0, y: 0, width: 0, height: 0 });
 
   const popupRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (popupRef.current && !isMaximized) {
-        const { x, y } = position;
-        const { width, height } = size;
-        const maxX = window.innerWidth - width;
-        const maxY = window.innerHeight - height;
-        
-        setPosition({
-          x: Math.min(Math.max(0, x), maxX),
-          y: Math.min(Math.max(0, y), maxY)
-        });
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [position, size, isMaximized]);
-
   const startDrag = (e: React.MouseEvent) => {
-    if (isMaximized || isResizing) return;
     setIsDragging(true);
     setDragOffset({
       x: e.clientX - position.x,
@@ -70,105 +41,27 @@ const StatisticButton = ({buttonName, statsAPI, fuelStationId, fuelStationName, 
     setIsDragging(false);
   };
 
-  const startResize = (direction: ResizeDirection, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsResizing(direction);
-    setResizeStart({
-      x: e.clientX,
-      y: e.clientY,
-      width: size.width,
-      height: size.height
-    });
-  };
-
-  const onResize = (e: MouseEvent) => {
-    if (!isResizing) return;
-    
-    const dx = e.clientX - resizeStart.x;
-    const dy = e.clientY - resizeStart.y;
-    const minWidth = 300;
-    const minHeight = 200;
-
-    let newWidth = size.width;
-    let newHeight = size.height;
-    let newX = position.x;
-    let newY = position.y;
-
-    switch (isResizing) {
-      case 'n':
-        newHeight = Math.max(minHeight, resizeStart.height - dy);
-        newY = position.y + (size.height - newHeight);
-        break;
-      case 'ne':
-        newWidth = Math.max(minWidth, resizeStart.width + dx);
-        newHeight = Math.max(minHeight, resizeStart.height - dy);
-        newY = position.y + (size.height - newHeight);
-        break;
-      case 'e':
-        newWidth = Math.max(minWidth, resizeStart.width + dx);
-        break;
-      case 'se':
-        newWidth = Math.max(minWidth, resizeStart.width + dx);
-        newHeight = Math.max(minHeight, resizeStart.height + dy);
-        break;
-      case 's':
-        newHeight = Math.max(minHeight, resizeStart.height + dy);
-        break;
-      case 'sw':
-        newWidth = Math.max(minWidth, resizeStart.width - dx);
-        newHeight = Math.max(minHeight, resizeStart.height + dy);
-        newX = position.x + (size.width - newWidth);
-        break;
-      case 'w':
-        newWidth = Math.max(minWidth, resizeStart.width - dx);
-        newX = position.x + (size.width - newWidth);
-        break;
-      case 'nw':
-        newWidth = Math.max(minWidth, resizeStart.width - dx);
-        newHeight = Math.max(minHeight, resizeStart.height - dy);
-        newX = position.x + (size.width - newWidth);
-        newY = position.y + (size.height - newHeight);
-        break;
-    }
-
-    setSize({ width: newWidth, height: newHeight });
-    setPosition({ x: newX, y: newY });
-  };
-
-  const endResize = () => {
-    setIsResizing(null);
-  };
-
   useEffect(() => {
     if (isDragging) {
       window.addEventListener('mousemove', onDrag);
       window.addEventListener('mouseup', endDrag);
     }
-    if (isResizing) {
-      window.addEventListener('mousemove', onResize);
-      window.addEventListener('mouseup', endResize);
-    }
-
     return () => {
       window.removeEventListener('mousemove', onDrag);
       window.removeEventListener('mouseup', endDrag);
-      window.removeEventListener('mousemove', onResize);
-      window.removeEventListener('mouseup', endResize);
     };
-  }, [isDragging, isResizing, dragOffset, resizeStart]);
+  }, [isDragging, dragOffset]);
 
   const fetchImage = async () => {
-
     setLoading(true);
     setError(null);
     try {
       const response = await fetch(statsAPI);
-      
       if (!response.ok) throw new Error('Failed to fetch image');
-      
+
       const blob = await response.blob();
       const objectUrl = URL.createObjectURL(blob);
-      
+
       setImageUrl(objectUrl);
       setShowPopup(true);
     } catch (err) {
@@ -178,30 +71,9 @@ const StatisticButton = ({buttonName, statsAPI, fuelStationId, fuelStationName, 
     }
   };
 
-  const toggleMaximize = () => {
-    if (!isMaximized && popupRef.current) {
-      const rect = popupRef.current.getBoundingClientRect();
-      setPosition({ x: rect.left, y: rect.top });
-    }
-    setIsMaximized(!isMaximized);
-    setIsMinimized(false);
-  };
-
-  const toggleMinimize = () => {
-    setIsMinimized(!isMinimized);
-    setIsMaximized(false);
-  };
-
   const closePopup = () => {
     setShowPopup(false);
   };
-
-  const ResizeHandle = ({ direction }: { direction: ResizeDirection }) => (
-    <div 
-      className={`resize-handle resize-${direction}`}
-      onMouseDown={(e) => startResize(direction, e)}
-    />
-  );
 
   return (
     <div className="fuel-stats-container">
@@ -223,57 +95,52 @@ const StatisticButton = ({buttonName, statsAPI, fuelStationId, fuelStationName, 
       {error && <div className="error-message">{error}</div>}
 
       {showPopup && (
-        <div 
-          className={`popup-overlay ${isMaximized ? 'maximized' : ''}`}
-          onClick={closePopup}
-        >
+        <div className="popup-overlay" onClick={closePopup}>
           <div
             ref={popupRef}
-            className={`popup ${isMinimized ? 'minimized' : ''}`}
+            className="popup"
             style={{
-              width: isMaximized ? '95vw' : `${size.width}px`,
-              height: isMaximized ? '95vh' : (isMinimized ? '40px' : `${size.height}px`),
-              transform: isMaximized ? 'none' : `translate(${position.x}px, ${position.y}px)`,
-              cursor: isDragging ? 'grabbing' : (isResizing ? `${isResizing}-resize` : 'default'),
+              width: `${size.width}px`,
+              height: `${size.height}px`,
+              transform: `translate(${position.x}px, ${position.y}px)`,
               position: 'fixed',
               top: '120px',
+              cursor: isDragging ? 'grabbing' : 'grab',
               boxSizing: 'border-box',
               margin: '0 auto',
-              maxWidth: '90vw',
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div 
-              className="popup-header"
-              onMouseDown={startDrag}
-            >
+            <div className="popup-header" onMouseDown={startDrag}>
               <h3>{fuelStationName}</h3>
-              <div className="popup-controls">
-                <button className="control-button" onClick={toggleMinimize}>
-                  {isMinimized ? '🗖' : '🗕'}
-                </button>
-                <button className="control-button" onClick={toggleMaximize}>
-                  {isMaximized ? '🗗' : '🗖'}
-                </button>
-                <button className="control-button close" onClick={closePopup}>
-                  ✕
-                </button>
-              </div>
+              <button className="control-button close" onClick={closePopup}>
+                ✕
+              </button>
             </div>
 
-            {!isMinimized && (
-              <div className="popup-content">
-                {imageUrl && <img src={imageUrl} alt="Fuel Statistics Chart" />}
-                <ResizeHandle direction="n" />
-                <ResizeHandle direction="ne" />
-                <ResizeHandle direction="e" />
-                <ResizeHandle direction="se" />
-                <ResizeHandle direction="s" />
-                <ResizeHandle direction="sw" />
-                <ResizeHandle direction="w" />
-                <ResizeHandle direction="nw" />
-              </div>
-            )}
+            <div className="popup-content">
+              {imageUrl && (
+                <img
+                  src={imageUrl}
+                  alt="Fuel Statistics Chart"
+                  onLoad={(e) => {
+                    const img = e.currentTarget;
+                    setSize({
+                      width: img.naturalWidth,
+                      height: img.naturalHeight + 50, // include header
+                    });
+                  }}
+                  style={{
+                    display: 'block',
+                    margin: '0 auto',
+                    width: 'auto',
+                    height: 'auto',
+                    maxWidth: 'none',
+                    maxHeight: 'none',
+                  }}
+                />
+              )}
+            </div>
           </div>
         </div>
       )}
