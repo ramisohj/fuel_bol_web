@@ -18,6 +18,7 @@ const StatisticButton = ({ buttonName, statsAPI, fuelStationId, fuelStationName,
   const [size, setSize] = useState({ width: 800, height: 600 });
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
 
   const popupRef = useRef<HTMLDivElement>(null);
 
@@ -75,6 +76,45 @@ const StatisticButton = ({ buttonName, statsAPI, fuelStationId, fuelStationName,
     setShowPopup(false);
   };
 
+  const getMaxDimensions = () => {
+    const maxWidth = window.innerWidth * 0.9;
+    const maxHeight = window.innerHeight * 0.8;
+    return { maxWidth, maxHeight };
+  };
+
+  const getScaledDimensions = (imgWidth: number, imgHeight: number) => {
+    const { maxWidth, maxHeight } = getMaxDimensions();
+    const ratio = Math.min(maxWidth / imgWidth, maxHeight / imgHeight);
+    
+    return {
+      width: imgWidth * ratio,
+      height: imgHeight * ratio
+    };
+  };
+
+  const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = e.currentTarget;
+    const naturalWidth = img.naturalWidth;
+    const naturalHeight = img.naturalHeight;
+    
+    setImageSize({ width: naturalWidth, height: naturalHeight });
+
+    const { maxWidth, maxHeight } = getMaxDimensions();
+    
+    if (naturalWidth > maxWidth || naturalHeight > maxHeight) {
+      const scaled = getScaledDimensions(naturalWidth, naturalHeight);
+      setSize({
+        width: scaled.width,
+        height: scaled.height + 50,
+      });
+    } else {
+      setSize({
+        width: naturalWidth,
+        height: naturalHeight + 50,
+      });
+    }
+  };
+
   return (
     <div className="fuel-stats-container">
       <button
@@ -123,20 +163,15 @@ const StatisticButton = ({ buttonName, statsAPI, fuelStationId, fuelStationName,
                 <img
                   src={imageUrl}
                   alt="Fuel Statistics Chart"
-                  onLoad={(e) => {
-                    const img = e.currentTarget;
-                    setSize({
-                      width: img.naturalWidth,
-                      height: img.naturalHeight + 50, // include header
-                    });
-                  }}
+                  onLoad={handleImageLoad}
                   style={{
                     display: 'block',
                     margin: '0 auto',
-                    width: 'auto',
+                    width: '100%',
                     height: 'auto',
-                    maxWidth: 'none',
-                    maxHeight: 'none',
+                    maxWidth: '100%',
+                    maxHeight: `${size.height - 50}px`,
+                    objectFit: 'contain',
                   }}
                 />
               )}
