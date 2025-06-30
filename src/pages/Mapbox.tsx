@@ -132,9 +132,7 @@ const Mapbox: React.FC = () => {
   }
 
   const createMarker = (feature: {
-    geometry: {
-      coordinates: LngLatLike;
-    }
+    geometry: { coordinates: LngLatLike };
     properties: {
       fuelStationName: string;
       idFuelStation: number;
@@ -147,21 +145,28 @@ const Mapbox: React.FC = () => {
     if (!mapRef.current) return;
 
     const coords = feature.geometry.coordinates;
-    const name = feature.properties?.fuelStationName || 'Unnamed';
-    const idFuelStation = feature.properties?.idFuelStation;
-    const direction = feature.properties?.direction || 'Unknown';
-    const fuelType = feature.properties?.fuelType || 'Unknown';
-    const levelBsa = feature.properties?.levelBsa || 0;
-    const monitoringAt = feature.properties?.monitoringAt || '';
+    const {
+      fuelStationName: name = 'Unnamed',
+      idFuelStation,
+      direction = 'Unknown',
+      fuelType = 'Unknown',
+      levelBsa = 0,
+      monitoringAt = '',
+    } = feature.properties;
 
-    const el = document.createElement('div');
-    el.className = 'custom-marker';
-    el.style.backgroundImage = selectFuelIcon(levelBsa);
-    el.style.width = '3rem';
-    el.style.height = '3rem';
-    el.style.backgroundSize = 'cover';
+    const container = document.createElement('div');
+    container.className = 'marker-container';
 
-    const marker = new mapboxgl.Marker(el)
+    const icon = document.createElement('div');
+    icon.className = 'custom-marker';
+    icon.style.backgroundImage = selectFuelIcon(levelBsa);
+    icon.style.width = '3rem';
+    icon.style.height = '3rem';
+    icon.style.backgroundSize = 'cover';
+
+    container.appendChild(icon);
+
+    const marker = new mapboxgl.Marker(container)
       .setLngLat(coords)
       .addTo(mapRef.current);
 
@@ -176,7 +181,6 @@ const Mapbox: React.FC = () => {
 
     const popupNode = document.createElement('div');
     const popupRoot = createRoot(popupNode);
-
     popupRoot.render(<FuelStationCard
       name={name}
       idFuelStation={idFuelStation}
@@ -186,14 +190,47 @@ const Mapbox: React.FC = () => {
       monitoringAt={monitoringAt}
       colorAmount={getAmountColor(levelBsa)}
     />);
-
     popup.setDOMContent(popupNode);
-    popup.setMaxWidth('100%');
-
     marker.setPopup(popup);
+
+    icon.addEventListener('click', (e) => {
+      e.stopPropagation();
+      removeAllMarkerLabels();
+      addLabelsToMarker(container, levelBsa, name);
+
+      popup.addTo(mapRef.current!);
+      popup.setLngLat(marker.getLngLat());
+    });
 
     return marker;
   }
+
+  const addLabelsToMarker = (container: HTMLElement, levelBsa: number, name: string) => {
+    const color = getAmountColor(levelBsa);
+
+    const topLabel = document.createElement('div');
+    topLabel.className = 'marker-label top';
+    topLabel.innerText = `${Math.round(levelBsa)} [L]`;
+    topLabel.style.color  = color;
+    topLabel.style.border = `2px solid ${color}`;
+
+    const bottomLabel = document.createElement('div');
+    bottomLabel.className = 'marker-label bottom';
+    bottomLabel.innerText = name;
+    bottomLabel.style.color  = color;
+    bottomLabel.style.border = `2px solid ${color}`;
+
+    container.insertBefore(topLabel, container.firstChild);
+    container.appendChild(bottomLabel);
+  };
+
+  const removeAllMarkerLabels = () => {
+    stationsMarkers.current.forEach((marker) => {
+      const el = marker.getElement();
+      const labels = el.querySelectorAll('.marker-label');
+      labels.forEach(label => label.remove());
+    });
+  };
 
   const toggleGeolocation = () => {
     if (geolocateControlRef.current && mapRef.current) {
@@ -224,6 +261,10 @@ const Mapbox: React.FC = () => {
         compact: true,
       })
     );
+
+    map.on('click', () => {
+      removeAllMarkerLabels();
+    });
 
     map.on('load', () => {
       navigator.geolocation.getCurrentPosition(
