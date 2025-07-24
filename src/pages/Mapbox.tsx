@@ -57,9 +57,8 @@ const Mapbox: React.FC = () => {
   
   const getFuelStations = async (region: number, fuelType: number) => {
     try {
-      console.info(API_ENDPOINTS.FUEL_STATIONS.GET_BY_REGION_FUEL_TYPE(region, fuelType))
       setIsLoadingGeoJson(true);
-      const response = await fetch(API_ENDPOINTS.FUEL_STATIONS.GET_BY_REGION_FUEL_TYPE(region, fuelType));
+      const response = await fetch(API_ENDPOINTS.FUEL_BOL_PY.GET_BY_REGION_FUEL_TYPE(region, fuelType));
       if (response.ok) {
         const geojson = await response.json();
         geojson.features.forEach((feature: any) => {
@@ -134,24 +133,24 @@ const Mapbox: React.FC = () => {
   const createMarker = (feature: {
     geometry: { coordinates: LngLatLike };
     properties: {
-      fuelStationName: string;
-      idFuelStation: number;
+      fuel_station_name: string;
+      id_fuel_station: number;
       direction: string;
-      fuelType: string;
-      levelBsa: number;
-      monitoringAt: string;
+      fuel_type: string;
+      level_bsa: number;
+      monitoring_at: string;
     }
   }) => {
     if (!mapRef.current) return;
 
     const coords = feature.geometry.coordinates;
     const {
-      fuelStationName: name = 'Unnamed',
-      idFuelStation,
+      fuel_station_name: name = 'Unnamed',
+      id_fuel_station,
       direction = 'Unknown',
-      fuelType = 'Unknown',
-      levelBsa = 0,
-      monitoringAt = '',
+      fuel_type = 'Unknown',
+      level_bsa = 0,
+      monitoring_at = '',
     } = feature.properties;
 
     const container = document.createElement('div');
@@ -159,7 +158,7 @@ const Mapbox: React.FC = () => {
 
     const icon = document.createElement('div');
     icon.className = 'custom-marker';
-    icon.style.backgroundImage = selectFuelIcon(levelBsa);
+    icon.style.backgroundImage = selectFuelIcon(level_bsa);
     icon.style.width = '3rem';
     icon.style.height = '3rem';
     icon.style.backgroundSize = 'cover';
@@ -183,12 +182,12 @@ const Mapbox: React.FC = () => {
     const popupRoot = createRoot(popupNode);
     popupRoot.render(<FuelStationCard
       name={name}
-      idFuelStation={idFuelStation}
+      idFuelStation={id_fuel_station}
       direction={direction}
-      fuelCode={getFuelCodeByFuelName(fuelType)}
-      levelBsa={levelBsa}
-      monitoringAt={monitoringAt}
-      colorAmount={getAmountColor(levelBsa)}
+      fuelCode={getFuelCodeByFuelName(fuel_type)}
+      levelBsa={level_bsa}
+      monitoringAt={monitoring_at}
+      colorAmount={getAmountColor(level_bsa)}
     />);
     popup.setDOMContent(popupNode);
     marker.setPopup(popup);
@@ -196,7 +195,7 @@ const Mapbox: React.FC = () => {
     icon.addEventListener('click', (e) => {
       e.stopPropagation();
       removeAllMarkerLabels();
-      addLabelsToMarker(container, levelBsa, name);
+      addLabelsToMarker(container, level_bsa, name);
 
       popup.addTo(mapRef.current!);
       popup.setLngLat(marker.getLngLat());

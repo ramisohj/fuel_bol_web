@@ -1,13 +1,10 @@
 const anh_fuel_level = process.env.REACT_APP_ANH_FUEL_LEVEL
-const fuel_bol = process.env.REACT_APP_FUEL_BOL
 const fuel_bol_py = process.env.REACT_APP_FUEL_BOL_PY
 
 
 export const API_ENDPOINTS = {
-  FUEL_STATIONS: {
-    GET_BY_REGION_FUEL_TYPE: (regionId: number, fuelType: number) => `${fuel_bol}/fuel-levels/geo/${regionId}/${fuelType}`,
-  },
   FUEL_BOL_PY: {
+    GET_BY_REGION_FUEL_TYPE: (regionId: number, fuelType: number) => `${fuel_bol_py}/api/fuel-levels/geo/${regionId}/${fuelType}`,
     GET_TIME_SERIES: (fuelStationId: number, fuelType: number, startDate: string, endDate: string) =>
         `${fuel_bol_py}/api/stats-image/time-series?station_id=${fuelStationId}&fuel_type=${fuelType}&startDate=${startDate}&endDate=${endDate}`,
     GET_STATISTICAL_GRAPHS: (fuelStationId: number, fuelType: number) =>
