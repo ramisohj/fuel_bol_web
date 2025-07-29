@@ -159,8 +159,9 @@ const Mapbox: React.FC = () => {
     const icon = document.createElement('div');
     icon.className = 'custom-marker';
     icon.style.backgroundImage = selectFuelIcon(level_bsa);
-    icon.style.width = '3rem';
-    icon.style.height = '3rem';
+    icon.style.opacity = level_bsa == 0 ? '0.4' : '1.0';
+    icon.style.width = '2rem';
+    icon.style.height = '2rem';
     icon.style.backgroundSize = 'cover';
 
     container.appendChild(icon);
