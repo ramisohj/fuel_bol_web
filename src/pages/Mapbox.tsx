@@ -27,7 +27,6 @@ interface MapboxGeocodeResponse {
 }
 
 const Mapbox: React.FC = () => {
-
   const { t } = useTranslation();
 
   const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -36,6 +35,7 @@ const Mapbox: React.FC = () => {
   const [isGeolocateActive, setIsGeolocateActive] = useState(false);
   const [isLoadingGeoJSON, setIsLoadingGeoJson] = useState(true);
   const stationsMarkers = useRef<mapboxgl.Marker[]>([]);
+  const currentPopupRef = useRef<mapboxgl.Popup | null>(null); // ✅ for tracking the open popup
 
   const getCountryCode = async () => {
     try {
@@ -43,18 +43,13 @@ const Mapbox: React.FC = () => {
       const data = await response.text();
       const lines = data.split('\n');
       const locationLine = lines.find(line => line.startsWith('loc='));
-      if (locationLine) {
-        const countryCode = locationLine.split('=')[1];
-        return countryCode;
-      }
-      return null;
+      return locationLine?.split('=')[1] || null;
     } catch (error) {
       console.error('Error getting location:', error);
       return null;
     }
   };
 
-  
   const getFuelStations = async (region: number, fuelType: number) => {
     try {
       setIsLoadingGeoJson(true);
@@ -68,7 +63,6 @@ const Mapbox: React.FC = () => {
       } else {
         console.error(`Error when try to get fuel stations: ${response.statusText}`);
       }
-      
     } catch (error) {
       console.error(`Error when try to get fuel stations: ${error}`);
     } finally {
@@ -76,46 +70,38 @@ const Mapbox: React.FC = () => {
     }
   };
 
-  const handleRegionChange = async (values: { region: number, fuelType: number }) => {
+  const handleRegionChange = async (values: { region: number; fuelType: number }) => {
     if (mapRef.current) {
-      stationsMarkers.current.forEach((marker) => {
-        marker.remove();
-      });
+      stationsMarkers.current.forEach(marker => marker.remove());
       stationsMarkers.current = [];
+
+      if (currentPopupRef.current) {
+        currentPopupRef.current.remove();
+        currentPopupRef.current = null;
+      }
+
       await getFuelStations(values.region, values.fuelType);
     }
-  }
+  };
 
   const selectFuelIcon = (levelBsa: number) => {
-    if (levelBsa <= 0) {
-      return 'url(/images/fuel_station_black.png)';
-    } else if (levelBsa > 0 && levelBsa <= 5000) {
-      return 'url(/images/fuel_station_red.png)';
-    } else if (levelBsa > 5000 && levelBsa <= 15000) {
-      return 'url(/images/fuel_station_orange.png)';
-    } else {
-      return 'url(/images/fuel_station_green.png)';
-    }
-  }
+    if (levelBsa <= 0) return 'url(/images/fuel_station_black.png)';
+    if (levelBsa <= 5000) return 'url(/images/fuel_station_red.png)';
+    if (levelBsa <= 15000) return 'url(/images/fuel_station_orange.png)';
+    return 'url(/images/fuel_station_green.png)';
+  };
 
   const getAmountColor = (levelBsa: number) => {
-    if (levelBsa <= 0) {
-      return COLORS.BLACK;
-    } else if (levelBsa > 0 && levelBsa <= 5000) {
-      return COLORS.RED;
-    } else if (levelBsa > 5000 && levelBsa <= 15000) {
-      return COLORS.ORANGE;
-    } else {
-      return COLORS.GREEN;
-    }
-  }
+    if (levelBsa <= 0) return COLORS.BLACK;
+    if (levelBsa <= 5000) return COLORS.RED;
+    if (levelBsa <= 15000) return COLORS.ORANGE;
+    return COLORS.GREEN;
+  };
 
   const addGeolocateControl = () => {
     if (mapRef.current) {
       geolocateControlRef.current = new mapboxgl.GeolocateControl({
-        positionOptions: {
-          enableHighAccuracy: true,
-        },
+        positionOptions: { enableHighAccuracy: true },
         trackUserLocation: true,
         showUserLocation: true,
         showAccuracyCircle: true,
@@ -128,7 +114,7 @@ const Mapbox: React.FC = () => {
         setIsGeolocateActive(true);
       });
     }
-  }
+  };
 
   const createMarker = (feature: {
     geometry: { coordinates: LngLatLike };
@@ -139,7 +125,7 @@ const Mapbox: React.FC = () => {
       fuel_type: string;
       level_bsa: number;
       monitoring_at: string;
-    }
+    };
   }) => {
     if (!mapRef.current) return;
 
@@ -172,38 +158,45 @@ const Mapbox: React.FC = () => {
 
     const popup = new mapboxgl.Popup({
       closeButton: true,
-      closeOnClick: true,
+      closeOnClick: false,
       offset: 25,
       className: 'centered-popup',
       anchor: 'top',
-      maxWidth: '100%'
+      maxWidth: '100%',
     });
 
     const popupNode = document.createElement('div');
     const popupRoot = createRoot(popupNode);
-    popupRoot.render(<FuelStationCard
-      name={name}
-      idFuelStation={id_fuel_station}
-      direction={direction}
-      fuelCode={getFuelCodeByFuelName(fuel_type)}
-      levelBsa={level_bsa}
-      monitoringAt={monitoring_at}
-      colorAmount={getAmountColor(level_bsa)}
-    />);
+    popupRoot.render(
+      <FuelStationCard
+        name={name}
+        idFuelStation={id_fuel_station}
+        direction={direction}
+        fuelCode={getFuelCodeByFuelName(fuel_type)}
+        levelBsa={level_bsa}
+        monitoringAt={monitoring_at}
+        colorAmount={getAmountColor(level_bsa)}
+      />
+    );
     popup.setDOMContent(popupNode);
-    marker.setPopup(popup);
 
     icon.addEventListener('click', (e) => {
       e.stopPropagation();
-      removeAllMarkerLabels();
-      addLabelsToMarker(container, level_bsa, name);
 
-      popup.addTo(mapRef.current!);
-      popup.setLngLat(marker.getLngLat());
+      removeAllMarkerLabels();
+
+      if (currentPopupRef.current) {
+        currentPopupRef.current.remove();
+        currentPopupRef.current = null;
+      }
+
+      addLabelsToMarker(container, level_bsa, name);
+      popup.setLngLat(marker.getLngLat()).addTo(mapRef.current!);
+      currentPopupRef.current = popup;
     });
 
     return marker;
-  }
+  };
 
   const addLabelsToMarker = (container: HTMLElement, levelBsa: number, name: string) => {
     const color = getAmountColor(levelBsa);
@@ -211,13 +204,13 @@ const Mapbox: React.FC = () => {
     const topLabel = document.createElement('div');
     topLabel.className = 'marker-label top';
     topLabel.innerText = `${Math.round(levelBsa)} [L]`;
-    topLabel.style.color  = color;
+    topLabel.style.color = color;
     topLabel.style.border = `2px solid ${color}`;
 
     const bottomLabel = document.createElement('div');
     bottomLabel.className = 'marker-label bottom';
     bottomLabel.innerText = name;
-    bottomLabel.style.color  = color;
+    bottomLabel.style.color = color;
     bottomLabel.style.border = `2px solid ${color}`;
 
     container.insertBefore(topLabel, container.firstChild);
@@ -225,7 +218,7 @@ const Mapbox: React.FC = () => {
   };
 
   const removeAllMarkerLabels = () => {
-    stationsMarkers.current.forEach((marker) => {
+    stationsMarkers.current.forEach(marker => {
       const el = marker.getElement();
       const labels = el.querySelectorAll('.marker-label');
       labels.forEach(label => label.remove());
@@ -234,14 +227,11 @@ const Mapbox: React.FC = () => {
 
   const toggleGeolocation = () => {
     if (geolocateControlRef.current && mapRef.current) {
-      
       if (!isGeolocateActive) {
         geolocateControlRef.current.trigger();
       } else {
         mapRef.current.removeControl(geolocateControlRef.current);
-
         addGeolocateControl();
-
         setIsGeolocateActive(false);
       }
     }
@@ -256,14 +246,14 @@ const Mapbox: React.FC = () => {
       attributionControl: false,
     });
 
-    map.addControl(
-      new mapboxgl.AttributionControl({
-        compact: true,
-      })
-    );
+    map.addControl(new mapboxgl.AttributionControl({ compact: true }));
 
     map.on('click', () => {
       removeAllMarkerLabels();
+      if (currentPopupRef.current) {
+        currentPopupRef.current.remove();
+        currentPopupRef.current = null;
+      }
     });
 
     map.on('load', () => {
@@ -273,19 +263,18 @@ const Mapbox: React.FC = () => {
           const { latitude, longitude } = position.coords;
           const response = await fetch(
             `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?` +
-            new URLSearchParams({
-              access_token: mapboxgl.accessToken,
-              types: 'region',
-              country: countryCode
-            } as Record<string, string>)
+              new URLSearchParams({
+                access_token: mapboxgl.accessToken,
+                types: 'region',
+                country: countryCode,
+              } as Record<string, string>)
           );
 
           if (!response.ok) throw new Error('Geocoding failed');
 
           const data = await response.json() as MapboxGeocodeResponse;
-
           const region = data.features.find(f => f.id.startsWith('region'));
-          
+
           if (!region) throw new Error('No region found for this location');
 
           const pair = Object.entries(REGIONS).find(([_, value]) => value.name === region.text);
@@ -301,7 +290,6 @@ const Mapbox: React.FC = () => {
     });
 
     mapRef.current = map;
-
     addGeolocateControl();
 
     return () => {
