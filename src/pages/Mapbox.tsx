@@ -265,7 +265,7 @@ const Mapbox: React.FC = () => {
             `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?` +
               new URLSearchParams({
                 access_token: mapboxgl.accessToken,
-                types: 'region',
+                types: 'region,place,district',
                 country: countryCode,
               } as Record<string, string>)
           );
@@ -273,9 +273,14 @@ const Mapbox: React.FC = () => {
           if (!response.ok) throw new Error('Geocoding failed');
 
           const data = await response.json() as MapboxGeocodeResponse;
+          console.log('data: ', data);
           const region = data.features.find(f => f.id.startsWith('region'));
 
-          if (!region) throw new Error('No region found for this location');
+          if (!region) {
+            console.warn('No region found. Falling back to Cochabamba.');
+            getFuelStations(REGIONS.COCHABAMBA.code, FUEL_TYPES.GASOLINE.code);
+            return;
+          }
 
           const pair = Object.entries(REGIONS).find(([_, value]) => value.name === region.text);
           if (pair) {
