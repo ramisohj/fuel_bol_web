@@ -4,7 +4,7 @@ const fuel_bol_py = process.env.REACT_APP_FUEL_BOL_PY
 
 export const API_ENDPOINTS = {
   FUEL_BOL_PY: {
-    GET_BY_REGION_FUEL_TYPE: (regionId: number, fuelType: number) => `${fuel_bol_py}/api/fuel-levels/geo/${regionId}/${fuelType}`,
+    GET_FUEL_LEVELS_BY_REGION: (regionId: number, fuelType: number) => `${fuel_bol_py}/api/fuel-levels/geo/${regionId}/${fuelType}`,
     GET_TIME_SERIES: (fuelStationId: number, fuelType: number, startDate: string, endDate: string) =>
         `${fuel_bol_py}/api/stats-image/time-series?station_id=${fuelStationId}&fuel_type=${fuelType}&startDate=${startDate}&endDate=${endDate}`,
     GET_STATISTICAL_GRAPHS: (fuelStationId: number, fuelType: number) =>
@@ -20,6 +20,10 @@ export const API_ENDPOINTS = {
 } as const;
 
 export const REGIONS = {
+  BOLIVIA: {
+    code: 0,
+    name: 'Bolivia'
+  },
   CHUQUISACA: {
     code: 1,
     name: 'Chuquisaca'
@@ -86,6 +90,7 @@ export const FUEL_TYPES = {
 } as const;
 
 export const REGION_LIST = {
+  BOLIVIA: 'BOLIVIA',
   COCHABAMBA: 'COCHABAMBA',
   LA_PAZ: 'LA_PAZ',
   ORURO: 'ORURO',
