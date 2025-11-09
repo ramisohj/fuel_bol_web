@@ -53,7 +53,8 @@ const Mapbox: React.FC = () => {
   const getFuelStations = async (region: number, fuelType: number) => {
     try {
       setIsLoadingGeoJson(true);
-      const response = await fetch(API_ENDPOINTS.FUEL_BOL_PY.GET_BY_REGION_FUEL_TYPE(region, fuelType));
+      console.log('Fetching fuel stations for region:', region, 'and fuel type:', fuelType);
+      const response = await fetch(API_ENDPOINTS.FUEL_BOL_PY.GET_FUEL_LEVELS_BY_REGION(region, fuelType));
       if (response.ok) {
         const geojson = await response.json();
         geojson.features.forEach((feature: any) => {
@@ -241,8 +242,8 @@ const Mapbox: React.FC = () => {
     const map = new mapboxgl.Map({
       container: mapContainerRef.current as HTMLDivElement,
       style: 'mapbox://styles/mapbox/streets-v11',
-      center: [-64.5, -17],
-      zoom: 5.2,
+      center: [-64.5, -16.0],
+      zoom: 5.0,
       attributionControl: false,
     });
 
@@ -257,41 +258,45 @@ const Mapbox: React.FC = () => {
     });
 
     map.on('load', () => {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const countryCode = await getCountryCode();
-          const { latitude, longitude } = position.coords;
-          const response = await fetch(
-            `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?` +
-              new URLSearchParams({
-                access_token: mapboxgl.accessToken,
-                types: 'region,place,district',
-                country: countryCode,
-              } as Record<string, string>)
-          );
 
-          if (!response.ok) throw new Error('Geocoding failed');
+      // THIS CODE WORKS FINE USING CURRENT LOCATION, BUT FOR TESTING PURPOSES IT WILL LOAD ALL BOLIVIA FUEL STATIONS
 
-          const data = await response.json() as MapboxGeocodeResponse;
-          console.log('data: ', data);
-          const region = data.features.find(f => f.id.startsWith('region'));
+      // navigator.geolocation.getCurrentPosition(
+      //   async (position) => {
+      //     const countryCode = await getCountryCode();
+      //     const { latitude, longitude } = position.coords;
+      //     const response = await fetch(
+      //       `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?` +
+      //         new URLSearchParams({
+      //           access_token: mapboxgl.accessToken,
+      //           types: 'region,place,district',
+      //           country: countryCode,
+      //         } as Record<string, string>)
+      //     );
 
-          if (!region) {
-            console.warn('No region found. Falling back to Cochabamba.');
-            getFuelStations(REGIONS.COCHABAMBA.code, FUEL_TYPES.GASOLINE.code);
-            return;
-          }
+      //     if (!response.ok) throw new Error('Geocoding failed');
 
-          const pair = Object.entries(REGIONS).find(([_, value]) => value.name === region.text);
-          if (pair) {
-            const defaultRegion = pair[0];
-            getFuelStations(REGIONS[defaultRegion as keyof typeof REGIONS].code, FUEL_TYPES.GASOLINE.code);
-          }
-        },
-        (error) => {
-          console.error('Error getting location:', error);
-        }
-      );
+      //     const data = await response.json() as MapboxGeocodeResponse;
+      //     console.log('data: ', data);
+      //     const region = data.features.find(f => f.id.startsWith('region'));
+
+      //     if (!region) {
+      //       console.warn('No region found. Falling back to Cochabamba.');
+      //       getFuelStations(REGIONS.COCHABAMBA.code, FUEL_TYPES.GASOLINE.code);
+      //       return;
+      //     }
+
+      //     const pair = Object.entries(REGIONS).find(([_, value]) => value.name === region.text);
+      //     if (pair) {
+      //       const defaultRegion = pair[0];
+      //       getFuelStations(REGIONS[defaultRegion as keyof typeof REGIONS].code, FUEL_TYPES.GASOLINE.code);
+      //     }
+      //   },
+      //   (error) => {
+      //     console.error('Error getting location:', error);
+      //   }
+      // );
+      getFuelStations(REGIONS.BOLIVIA.code, FUEL_TYPES.GASOLINE.code);
     });
 
     mapRef.current = map;

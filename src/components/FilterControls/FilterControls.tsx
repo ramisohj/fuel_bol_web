@@ -17,7 +17,7 @@ const FilterControls = ({
   
   const { t } = useTranslation();
 
-  const [region, setRegion] = useState<number>(REGIONS.COCHABAMBA.code);
+  const [region, setRegion] = useState<number>(REGIONS.BOLIVIA.code);
   const [fuelType, setFuelType] = useState<number>(FUEL_TYPES.GASOLINE.code);
 
   const handleRegionChange = (value: number) => {
